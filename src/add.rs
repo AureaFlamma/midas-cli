@@ -8,7 +8,7 @@ pub fn add_holding() -> Result<(), Box<dyn std::error::Error>> {
     println!("=== Add New Gold Holding ===\n");
     
     // Get coin type with interactive selection
-    let coin_type = select_coin_type()?;
+    let (coin_type, gold_content) = select_coin_type()?;
     
     // Get purchase date
     let purchase_date = loop {
