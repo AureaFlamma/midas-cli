@@ -12,7 +12,7 @@ pub fn list_holdings() -> Result<(), Box<dyn std::error::Error>> {
     
     // Create table
     let mut table = Table::new();
-    table.set_header(vec!["Coin Type", "Purchase Date", "Purchase Price (£)"]);
+    table.set_header(vec!["Coin Type", "Gold weight (g)", "Purchase Date", "Purchase Price (£)"]);
     
     // Calculate total
     let mut total = 0.0;
@@ -20,6 +20,7 @@ pub fn list_holdings() -> Result<(), Box<dyn std::error::Error>> {
     for holding in &holdings {
         table.add_row(vec![
             &holding.coin_type,
+            &format!("{:.2}", holding.gold_content),
             &holding.purchase_date,
             &format!("£{:.2}", holding.purchase_price),
         ]);

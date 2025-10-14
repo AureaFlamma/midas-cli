@@ -9,7 +9,8 @@ pub fn add_holding() -> Result<(), Box<dyn std::error::Error>> {
     
     // Get coin type with interactive selection
     let (coin_type, gold_content) = select_coin_type()?;
-    
+
+    println!("Selected: {} ({:.2}g gold content)", coin_type, gold_content);
     // Get purchase date
     let purchase_date = loop {
         let date_str = prompt("Purchase date (YYYY-MM-DD): ")?;
@@ -34,6 +35,7 @@ pub fn add_holding() -> Result<(), Box<dyn std::error::Error>> {
     // Create new holding
     let new_holding = GoldHolding {
         coin_type,
+        gold_content,
         purchase_date,
         purchase_price,
     };
