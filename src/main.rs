@@ -4,6 +4,7 @@ mod types;
 mod helpers;
 mod add;
 mod list;
+mod coin_types;
 
 use add::add_holding;
 use list::list_holdings;

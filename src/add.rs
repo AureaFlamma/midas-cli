@@ -1,13 +1,30 @@
 use crate::helpers::{load_holdings, save_holdings, prompt};
 use crate::types::GoldHolding;
+use crate::coin_types::{display_coin_options, get_coin_type_by_index, COIN_TYPES};
 use chrono::NaiveDate;
 
 // Add a new holding interactively
 pub fn add_holding() -> Result<(), Box<dyn std::error::Error>> {
     println!("=== Add New Gold Holding ===\n");
     
-    // Get coin type
-    let coin_type = prompt("Coin type (e.g., Sovereign, Britannia): ")?;
+    // Get coin type with selection
+    let coin_type = loop {
+        display_coin_options();
+        let input = prompt("\nSelect coin type (enter number): ")?;
+        
+        match input.parse::<usize>() {
+            Ok(index) if index > 0 && index <= COIN_TYPES.len() => {
+                break get_coin_type_by_index(index).unwrap().to_string();
+            }
+            Ok(index) if index == COIN_TYPES.len() + 1 => {
+                // Custom option
+                break prompt("Enter custom coin type: ")?;
+            }
+            _ => println!("Invalid selection. Please enter a number between 1 and {}\n", COIN_TYPES.len() + 1),
+        }
+    };
+    
+    // ...existing code for purchase_date and purchase_price...
     
     // Get purchase date
     let purchase_date = loop {
