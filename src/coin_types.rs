@@ -1,4 +1,4 @@
-use inquire::Select;
+use inquire::{Select, Text};
 
 /*   A. Why &str rather than String?
  * const context requires the values to be known at compile time. String literals live in the binary, so are known at CT. 
@@ -21,7 +21,7 @@ pub const COIN_TYPES: &[(&str, f64)] = &[
     ("Australian Kangaroo", 31.10),
 ];
 
-pub fn select_coin_type() -> Result<(String, Option<f64>), Box<dyn std::error::Error>> {
+pub fn select_coin_type() -> Result<(String, f64), Box<dyn std::error::Error>> {
     let mut options: Vec<String> = COIN_TYPES.iter()
         .map(|(name, grams)| format!("{} ({:.2}g gold)", name, grams))
         .collect();
@@ -33,18 +33,32 @@ pub fn select_coin_type() -> Result<(String, Option<f64>), Box<dyn std::error::E
         .prompt()?;
     
     if selection == "Other (custom)" {
-        let custom = inquire::Text::new("Enter custom coin type:")
+        let custom_name = Text::new("Enter custom coin type:")
             .prompt()?;
-        Ok((custom, None))  // No predefined gold content for custom
+        
+        // Get custom gold content
+        let custom_grams = loop {
+            let custom_grams_str = Text::new("Enter gold content (grams):")
+                .with_help_message("Enter the amount of gold in grams (e.g., 31.10)")
+                .prompt()?;
+            
+            match custom_grams_str.parse::<f64>() {
+                Ok(custom_grams) if custom_grams > 0.0 => break custom_grams,  // Return f64 directly
+                Ok(_) => println!("Gold content must be greater than 0"),
+                Err(_) => println!("Invalid number format. Please enter a valid number"),
+            }
+        };
+        
+        Ok((custom_name, custom_grams))  // Both are guaranteed values
     } else {
         // Find the selected coin and return name + gold content
         for (name, grams) in COIN_TYPES {
             if selection.starts_with(name) {
-                return Ok((name.to_string(), Some(*grams)));
+                return Ok((name.to_string(), *grams));  // Return f64 directly
             }
         }
-        // Fallback (shouldn't happen)
-        Ok((selection, None))
+        // Fallback (shouldn't happen) - but we need to handle it
+        Err("Unable to find selected coin".into())
     }
 }
 
