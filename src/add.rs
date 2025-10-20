@@ -1,7 +1,7 @@
 use crate::helpers::{load_holdings, save_holdings, prompt};
 use crate::types::GoldHolding;
 use crate::coin_types::select_coin_type;
-use chrono::NaiveDate;
+use chrono::{Datelike, NaiveDate, Utc};
 
 // Add a new holding interactively
 pub fn add_holding() -> Result<(), Box<dyn std::error::Error>> {
@@ -11,6 +11,21 @@ pub fn add_holding() -> Result<(), Box<dyn std::error::Error>> {
     let (coin_type, gold_content) = select_coin_type()?;
 
     println!("Selected: {} ({:.2}g gold content)", coin_type, gold_content);
+    let coin_year: i32 = loop {
+        let year_str = prompt("Mint year: ")?;
+        
+        // Get current year
+        let current_year = Utc::now().year();
+        let minimum_year = 1650; // TODO: abstract into a constants file.
+        // Validate year is a 4-digit number within valid range
+        match year_str.parse::<i32>() {
+            Ok(year) if year >= minimum_year && year <= current_year => break year,
+            Ok(year) if year > current_year => {
+                println!("Invalid year. Year cannot be in the future (max: {})", current_year);
+            },
+            _ => println!("Invalid year format. Please use YYYY (e.g., 2024)"),
+        }
+    };
     // Get purchase date
     let purchase_date = loop {
         let date_str = prompt("Purchase date (YYYY-MM-DD): ")?;
@@ -35,6 +50,7 @@ pub fn add_holding() -> Result<(), Box<dyn std::error::Error>> {
     // Create new holding
     let new_holding = GoldHolding {
         coin_type,
+        coin_year,
         gold_content,
         purchase_date,
         purchase_price,
