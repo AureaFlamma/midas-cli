@@ -11,7 +11,6 @@ pub fn add_holding() -> Result<(), Box<dyn std::error::Error>> {
     // Get coin type with interactive selection
     let (coin_type, gold_content, code) = select_coin_type()?;
 
-    println!("Selected: {} ({:.2}g gold content)", coin_type, gold_content);
     let coin_year: i32 = loop {
         let year_str = prompt("Mint year: ")?;
         
