@@ -2,12 +2,14 @@ use clap::{Parser, Subcommand};
 
 mod add;
 mod coin_types;
+mod gold_price;
 mod helpers;
 mod list;
 mod types;
 mod uid;
 
 use add::add_holding;
+use dotenv::dotenv;
 use list::list_holdings;
 
 // CLI structure - defines the commands our app accepts
@@ -26,8 +28,9 @@ enum Commands {
     /// List all holdings in a table
     List,
 }
-
-fn main() {
+#[tokio::main]
+async fn main() {
+    dotenv().ok();
     let cli = Cli::parse();
 
     // Execute the appropriate command
@@ -39,7 +42,7 @@ fn main() {
             }
         }
         Commands::List => {
-            if let Err(e) = list_holdings() {
+            if let Err(e) = list_holdings().await {
                 eprintln!("Error listing holdings: {}", e);
                 std::process::exit(1);
             }
