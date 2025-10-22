@@ -1,10 +1,10 @@
 use clap::{Parser, Subcommand};
 
-mod types;
-mod helpers;
 mod add;
-mod list;
 mod coin_types;
+mod helpers;
+mod list;
+mod types;
 mod uid;
 
 use add::add_holding;

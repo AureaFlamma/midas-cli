@@ -1,5 +1,5 @@
-use rand::{rng, Rng};
 use rand::distr::Alphanumeric;
+use rand::{rng, Rng};
 
 pub fn construct_uid(code: &str, year: &str) -> String {
     fn generate_uid() -> String {
@@ -10,9 +10,9 @@ pub fn construct_uid(code: &str, year: &str) -> String {
             .map(char::from)
             .collect()
     }
-    
+
     let uid = generate_uid();
     format!("{}.{}.{}", code, year, uid)
 }
-// TODO: Think about final and component string validation. If needed, change return type 
+// TODO: Think about final and component string validation. If needed, change return type
 // to Result
