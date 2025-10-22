@@ -10,20 +10,20 @@ use inquire::{Select, Text};
  *   C. Why explicit annotation?
  * Rust requires explicit type annotation for const and static items.
  */
-pub const COIN_TYPES: &[(&str, f64)] = &[ 
-    ("Sovereign", 7.32),                    // grams of gold
-    ("Britannia", 31.10),
-    ("Krugerrand", 33.93), 
-    ("American Eagle", 33.93),
-    ("Canadian Maple Leaf", 31.10),
-    ("Austrian Philharmonic", 31.10),
-    ("Chinese Panda", 30.00),
-    ("Australian Kangaroo", 31.10),
-];
+pub const COIN_TYPES: &[(&str, f64, &str)] = &[ 
+    ("Sovereign", 7.32, "sov"),                    // grams of gold
+    ("Britannia", 31.10, "brt"),
+    ("Krugerrand", 33.93, "kur"), 
+    ("American Eagle", 33.93, "eag"),
+    ("Canadian Maple Leaf", 31.10, "mpl"),
+    ("Austrian Philharmonic", 31.10, "phi"),
+    ("Chinese Panda", 30.00, "pan"),
+    ("Australian Kangaroo", 31.10, "kan"),
+]; // TODO: A struct may be more appropriate here.
 
-pub fn select_coin_type() -> Result<(String, f64), Box<dyn std::error::Error>> {
+pub fn select_coin_type() -> Result<(String, f64, String), Box<dyn std::error::Error>> {
     let mut options: Vec<String> = COIN_TYPES.iter()
-        .map(|(name, grams)| format!("{} ({:.2}g gold)", name, grams))
+        .map(|(name, grams, _)| format!("{} ({:.2}g gold)", name, grams))
         .collect();
     options.push("Other (custom)".to_string());
     
@@ -35,6 +35,8 @@ pub fn select_coin_type() -> Result<(String, f64), Box<dyn std::error::Error>> {
     if selection == "Other (custom)" {
         let custom_name = Text::new("Enter custom coin type:")
             .prompt()?;
+
+    let custom_code = format!("{:0<3}", custom_name.chars().filter(|c| c.is_alphanumeric()).take(3).collect::<String>().to_lowercase().to_lowercase());
         
         // Get custom gold content
         let custom_grams = loop {
@@ -49,12 +51,12 @@ pub fn select_coin_type() -> Result<(String, f64), Box<dyn std::error::Error>> {
             }
         };
         
-        Ok((custom_name, custom_grams))  // Both are guaranteed values
+        Ok((custom_name, custom_grams, custom_code))  // Both are guaranteed values
     } else {
         // Find the selected coin and return name + gold content
-        for (name, grams) in COIN_TYPES {
+        for (name, grams, code) in COIN_TYPES {
             if selection.starts_with(name) {
-                return Ok((name.to_string(), *grams));  // Return f64 directly
+                return Ok((name.to_string(), *grams, code.to_string()));  // Return f64 directly
             }
         }
         // Fallback (shouldn't happen) - but we need to handle it
@@ -65,6 +67,6 @@ pub fn select_coin_type() -> Result<(String, f64), Box<dyn std::error::Error>> {
 // Helper function to get gold content by name
 pub fn get_gold_content(coin_name: &str) -> Option<f64> {
     COIN_TYPES.iter()
-        .find(|(name, _)| *name == coin_name)
-        .map(|(_, grams)| *grams)
+        .find(|(name, _, _)| *name == coin_name)  // Need 3 elements, not 2
+        .map(|(_, grams, _)| *grams)              // Need 3 elements, not 2
 }
