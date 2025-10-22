@@ -1,6 +1,7 @@
 use crate::helpers::{load_holdings, save_holdings, prompt};
 use crate::types::GoldHolding;
 use crate::coin_types::select_coin_type;
+use crate::uid::construct_uid;
 use chrono::{Datelike, NaiveDate, Utc};
 
 // Add a new holding interactively
@@ -8,7 +9,7 @@ pub fn add_holding() -> Result<(), Box<dyn std::error::Error>> {
     println!("=== Add New Gold Holding ===\n");
     
     // Get coin type with interactive selection
-    let (coin_type, gold_content) = select_coin_type()?;
+    let (coin_type, gold_content, code) = select_coin_type()?;
 
     println!("Selected: {} ({:.2}g gold content)", coin_type, gold_content);
     let coin_year: i32 = loop {
@@ -46,9 +47,12 @@ pub fn add_holding() -> Result<(), Box<dyn std::error::Error>> {
             _ => println!("Invalid price. Please enter a positive number"),
         }
     };
-    
+
+    let uid = construct_uid(&code, &coin_year.to_string()); // TODO: Maybe coin year should be a string in general?
+
     // Create new holding
     let new_holding = GoldHolding {
+        uid,
         coin_type,
         coin_year,
         gold_content,
