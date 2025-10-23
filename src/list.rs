@@ -28,10 +28,12 @@ pub async fn list_holdings() -> Result<(), Box<dyn std::error::Error>> {
     ]);
 
     // Calculate total
-    let mut total = 0.0;
+    let mut total_purchase_price = 0.0;
+    let mut total_price_now = 0.0;
 
     for holding in &holdings {
         // TODO: destructure holding
+        // FIXME: Mixing calculating logic and add-to-table logic.
         let current_asset_price = current_price_per_gram * holding.gold_content;
         let price_change = current_asset_price - holding.purchase_price;
         let percentage_change = (price_change / holding.purchase_price) * 100.00;
@@ -46,12 +48,19 @@ pub async fn list_holdings() -> Result<(), Box<dyn std::error::Error>> {
             &format!("£{:.2}", price_change),
             &format!("{:.2}%", percentage_change), // TODO: add handling of negative
         ]);
-        total += holding.purchase_price;
+        total_purchase_price += holding.purchase_price;
+        total_price_now += current_asset_price;
     }
 
+    let total_price_change = total_price_now - total_purchase_price;
+    let total_percentage_change = (total_price_change / total_purchase_price) * 100.00;
     println!("\n{}", table);
     println!("\nTotal Holdings: {}", holdings.len());
-    println!("Total Investment: £{:.2}", total);
+    println!("Total Investment: £{:.2}", total_purchase_price);
+    println!(
+        "Total change: £{:.2}({:.2}%)",
+        total_price_change, total_percentage_change
+    );
 
     Ok(())
 }
