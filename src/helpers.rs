@@ -1,4 +1,6 @@
 use crate::types::GoldHolding;
+use colored::Colorize;
+use comfy_table::{Cell, Color, Table};
 use std::fs;
 use std::io::{self, Write};
 use std::path::PathBuf;
@@ -48,4 +50,31 @@ pub fn prompt(message: &str) -> Result<String, Box<dyn std::error::Error>> {
     let mut input = String::new();
     io::stdin().read_line(&mut input)?;
     Ok(input.trim().to_string())
+}
+
+pub fn get_price_cell(price_change: f64) -> Cell {
+    let text = format!("£{:.2}", price_change);
+    let mut cell = Cell::new(text);
+
+    if price_change > 0.0 {
+        cell = cell.fg(Color::Green);
+    } else if price_change < 0.0 {
+        cell = cell.fg(Color::Red);
+    }
+
+    cell
+}
+
+// TODO: These 2 functions differ with position of 1 character only. Construct into one function
+pub fn get_percentage_cell(price_change: f64) -> Cell {
+    let text = format!("{:.2}%", price_change);
+    let mut cell = Cell::new(text);
+
+    if price_change > 0.0 {
+        cell = cell.fg(Color::Green);
+    } else if price_change < 0.0 {
+        cell = cell.fg(Color::Red);
+    }
+
+    cell
 }
