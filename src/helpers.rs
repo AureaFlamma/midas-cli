@@ -1,4 +1,4 @@
-use crate::types::GoldHolding;
+use crate::types::{GoldHolding, GoldHoldingStats, TotalStats};
 use colored::Colorize;
 use comfy_table::{Cell, Color, Table};
 use std::fs;
@@ -79,11 +79,41 @@ pub fn get_percentage_cell(price_change: f64) -> Cell {
 
     cell
 }
-    // TODO: minus sign should be before the £ sign.
+// TODO: minus sign should be before the £ sign.
 pub fn get_colored_text(value: f64, text: &str) -> String {
     if value >= 0.0 {
         text.green().to_string()
     } else {
         text.red().to_string()
+    }
+}
+
+pub fn get_coin_stats(gold_price: f64, gold_content: f64, purchase_price: f64) -> GoldHoldingStats {
+    let current_price = gold_price * gold_content;
+    let price_change = current_price - purchase_price;
+    let percentage_change = (price_change / purchase_price) * 100.00;
+
+    GoldHoldingStats {
+        current_price,
+        price_change,
+        percentage_change,
+    }
+}
+
+pub fn get_total_stats(holdings_with_stats: &Vec<(&GoldHolding, GoldHoldingStats)>) -> TotalStats {
+    let mut total_purchase_price = 0.0;
+    let mut total_price_now = 0.0;
+    for (holding, stats) in holdings_with_stats {
+        total_purchase_price += holding.purchase_price;
+        total_price_now += stats.current_price;
+    } // TODO: change so that total_price_now multiplies total_weight by current price for lesser error.
+      // TODO: return total_weight too
+    let total_price_change = total_price_now - total_purchase_price;
+    let total_percentage_change = (total_price_change / total_purchase_price) * 100.00;
+
+    TotalStats {
+        total_purchase_price,
+        total_price_change,
+        total_percentage_change,
     }
 }

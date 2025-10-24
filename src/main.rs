@@ -26,7 +26,10 @@ enum Commands {
     /// Add a new gold holding
     Add,
     /// List all holdings in a table
-    List,
+    List {
+        #[arg(short, long)]
+        detail: bool,
+    },
 }
 #[tokio::main]
 async fn main() {
@@ -41,8 +44,8 @@ async fn main() {
                 std::process::exit(1);
             }
         }
-        Commands::List => {
-            if let Err(e) = list_holdings().await {
+        Commands::List { detail } => {
+            if let Err(e) = list_holdings(detail).await {
                 eprintln!("Error listing holdings: {}", e);
                 std::process::exit(1);
             }

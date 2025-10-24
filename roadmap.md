@@ -2,11 +2,11 @@
 2. Auto-creation of UID ✅
 3. Install/configure linter/prettier ✅
 4. API calls ✅
-5. Improvements to existing table:
-  - Price change summary
-  - different signs for positive / negative price change
-  - different colours for positive / negative change
-6. List-long and list-short, different approach to IDs
+5. Improvements to existing table: 
+  - Price change summary ✅
+  - different colours for positive / negative change ✅
+6. Summary table
+7. Clean up detailed table
 6. Other controls (perhaps with dashboard thing)
   a. Delete holding
   b. Reorder holdings
