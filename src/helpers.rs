@@ -53,6 +53,7 @@ pub fn prompt(message: &str) -> Result<String, Box<dyn std::error::Error>> {
 }
 
 pub fn get_price_cell(price_change: f64) -> Cell {
+    // TODO: minus sign should be before the £ sign.
     let text = format!("£{:.2}", price_change);
     let mut cell = Cell::new(text);
 
@@ -77,4 +78,12 @@ pub fn get_percentage_cell(price_change: f64) -> Cell {
     }
 
     cell
+}
+    // TODO: minus sign should be before the £ sign.
+pub fn get_colored_text(value: f64, text: &str) -> String {
+    if value >= 0.0 {
+        text.green().to_string()
+    } else {
+        text.red().to_string()
+    }
 }

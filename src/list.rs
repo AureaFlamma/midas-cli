@@ -1,6 +1,6 @@
 use crate::gold_price::fetch_gold_price_gbp;
-use crate::helpers::{load_holdings, get_percentage_cell, get_price_cell};
-use comfy_table::{Table, Cell, Color};
+use crate::helpers::{get_colored_text, get_percentage_cell, get_price_cell, load_holdings};
+use comfy_table::{Cell, Color, Table};
 
 // List all holdings in a table
 pub async fn list_holdings() -> Result<(), Box<dyn std::error::Error>> {
@@ -45,7 +45,7 @@ pub async fn list_holdings() -> Result<(), Box<dyn std::error::Error>> {
             Cell::new(&holding.purchase_date),
             Cell::new(&format!("£{:.2}", holding.purchase_price)),
             Cell::new(&format!("£{:.2}", current_asset_price)),
-            get_price_cell(price_change), // Use the colored cell
+            get_price_cell(price_change),
             get_percentage_cell(percentage_change),
         ]);
         total_purchase_price += holding.purchase_price;
@@ -57,11 +57,14 @@ pub async fn list_holdings() -> Result<(), Box<dyn std::error::Error>> {
     println!("\n{}", table);
     println!("\nTotal Holdings: {}", holdings.len());
     println!("Total Investment: £{:.2}", total_purchase_price);
-    // println!(
-    //     "Total change: {}({:.2}%)",
-    //     get_price_cell(total_price_change),
-    //     total_percentage_change
-    // );
+    println!(
+        "Total change: {}({})",
+        get_colored_text(total_price_change, &format!("£{:.2}", total_price_change)),
+        get_colored_text(
+            total_percentage_change,
+            &format!("{:.2}%", total_percentage_change)
+        )
+    );
 
     Ok(())
 }
