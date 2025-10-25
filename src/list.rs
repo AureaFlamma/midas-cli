@@ -1,6 +1,7 @@
 use crate::gold_price::fetch_gold_price_gbp;
 use crate::helpers::{
-    get_coin_stats, get_colored_text, get_percentage_cell, get_price_cell, load_holdings, get_total_stats
+    get_coin_stats, get_colored_text, get_percentage_cell, get_price_cell, get_total_stats,
+    load_holdings,
 };
 use crate::types::TotalStats;
 use comfy_table::{Cell, Color, Table};
@@ -32,40 +33,60 @@ pub async fn list_holdings(detail: bool) -> Result<(), Box<dyn std::error::Error
         total_percentage_change,
     } = get_total_stats(&holdings_with_stats);
 
-    // Create table
-    let mut table = Table::new();
-    table.set_header(vec![
-        "Asset ID",
-        "Coin Type",
-        "Coin year",
-        "Gold weight (g)",
-        "Purchase Date",
-        "Purchase Price (£)",
-        "Current Price (£)",
-        "Price change (£)",
-        "Price change (%)",
-    ]);
-
-    // Calculate total
-
-    for holding in &holdings {
-        // TODO: destructure holding
-        // FIXME: Mixing calculating logic and add-to-table logic.
-
-        table.add_row(vec![
-            Cell::new(&holding.uid),
-            Cell::new(&holding.coin_type),
-            Cell::new(&holding.coin_year.to_string()),
-            Cell::new(&format!("{:.2}", holding.gold_content)),
-            Cell::new(&holding.purchase_date),
-            Cell::new(&format!("£{:.2}", holding.purchase_price)),
-            Cell::new(&format!("£{:.2}", current_asset_price)),
-            get_price_cell(price_change),
-            get_percentage_cell(percentage_change),
+    // TODO: This can be abstracted
+    if detail {
+        let mut detail_table = Table::new();
+        detail_table.set_header(vec![
+            "Asset ID",
+            "Coin Type",
+            "Coin year",
+            "Gold weight (g)",
+            "Purchase Date",
+            "Purchase Price (£)",
+            "Current Price (£)",
+            "Price change (£)",
+            "Price change (%)",
         ]);
+
+        for (holding, stat) in &holdings_with_stats {
+            // TODO: destructure holding
+            // FIXME: Mixing calculating logic and add-to-table logic.
+
+            detail_table.add_row(vec![
+                Cell::new(&holding.uid),
+                Cell::new(&holding.coin_type),
+                Cell::new(&holding.coin_year.to_string()),
+                Cell::new(&format!("{:.2}", holding.gold_content)),
+                Cell::new(&holding.purchase_date),
+                Cell::new(&format!("£{:.2}", holding.purchase_price)),
+                Cell::new(&format!("£{:.2}", stat.current_price)),
+                get_price_cell(stat.price_change),
+                get_percentage_cell(stat.percentage_change),
+            ]);
+        }
+
+        println!("\n{}", detail_table);
+    } else {
+        let mut summary_table = Table::new();
+        summary_table.set_header(vec![
+            "Asset ID",
+            "Au content (g)",
+            "Current Price (£)",
+            "Price change",
+        ]);
+
+        for (holding, stat) in &holdings_with_stats {
+            summary_table.add_row(vec![
+                &holding.uid,
+                &format!("{:.2}", holding.gold_content),
+                &format!("{:.2}", stat.current_price),
+                &format!("£{:.2}({:.2}%)", stat.price_change, stat.percentage_change),
+            ]);
+        }
+
+        println!("\n{}", summary_table);
     }
 
-    println!("\n{}", table);
     println!("\nTotal Holdings: {}", holdings.len());
     println!("Total Investment: £{:.2}", total_purchase_price);
     println!(
