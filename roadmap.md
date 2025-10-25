@@ -5,8 +5,14 @@
 5. Improvements to existing table: 
   - Price change summary ✅
   - different colours for positive / negative change ✅
-6. Summary table
-7. Clean up detailed table
+6. Summary table ✅
+7. Clean up both tables
+  - address TODO comments
+  - Revamp asset ID
+  - Colour for summary table
+  - Better colour for overall summary
+  - Styling: either MD, or bold headings
+  
 6. Other controls (perhaps with dashboard thing)
   a. Delete holding
   b. Reorder holdings

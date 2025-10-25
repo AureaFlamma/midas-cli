@@ -23,3 +23,5 @@ pub struct TotalStats {
     pub total_price_change: f64,
     pub total_percentage_change: f64,
 }
+
+pub type HoldingsWithStats = Vec<(GoldHolding, GoldHoldingStats)>;

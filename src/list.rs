@@ -1,7 +1,7 @@
 use crate::gold_price::fetch_gold_price_gbp;
 use crate::helpers::{
-    get_coin_stats, get_colored_text, get_percentage_cell, get_price_cell, get_total_stats,
-    load_holdings,
+    get_coin_stats, get_colored_text, get_holdings_stats, get_percentage_cell, get_price_cell,
+    get_total_stats, load_holdings,
 };
 use crate::types::TotalStats;
 use comfy_table::{Cell, Color, Table};
@@ -9,23 +9,13 @@ use comfy_table::{Cell, Color, Table};
 // List all holdings in a table
 pub async fn list_holdings(detail: bool) -> Result<(), Box<dyn std::error::Error>> {
     let holdings = load_holdings()?;
-    let current_price_per_gram: f64 = fetch_gold_price_gbp().await?; // TODO: Implement caching to prevent more than 1 call a day. Also if call fails, display last fetched value.
 
     if holdings.is_empty() {
         println!("No holdings found. Use 'midas add' to add your first holding.");
         return Ok(());
-    }
-    let holdings_with_stats = holdings
-        .iter()
-        .map(|holding| {
-            let stats = get_coin_stats(
-                current_price_per_gram,
-                holding.gold_content,
-                holding.purchase_price,
-            );
-            (holding, stats)
-        })
-        .collect(); // TODO: this can be abstracted further
+    } // TODO: Abstract into warning function or change load_holdings to print from within the function
+
+    let holdings_with_stats = get_holdings_stats(holdings).await?;
 
     let TotalStats {
         total_purchase_price,
@@ -33,7 +23,7 @@ pub async fn list_holdings(detail: bool) -> Result<(), Box<dyn std::error::Error
         total_percentage_change,
     } = get_total_stats(&holdings_with_stats);
 
-    // TODO: This can be abstracted
+    // TODO: This can be abstracted. Maybe instread of if-statement, do if-expression?
     if detail {
         let mut detail_table = Table::new();
         detail_table.set_header(vec![
@@ -87,7 +77,7 @@ pub async fn list_holdings(detail: bool) -> Result<(), Box<dyn std::error::Error
         println!("\n{}", summary_table);
     }
 
-    println!("\nTotal Holdings: {}", holdings.len());
+    println!("\nTotal Holdings: {}", holdings_with_stats.len());
     println!("Total Investment: £{:.2}", total_purchase_price);
     println!(
         "Total change: {}({})",

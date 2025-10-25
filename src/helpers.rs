@@ -1,4 +1,5 @@
-use crate::types::{GoldHolding, GoldHoldingStats, TotalStats};
+use crate::gold_price::fetch_gold_price_gbp;
+use crate::types::{GoldHolding, GoldHoldingStats, HoldingsWithStats, TotalStats};
 use colored::Colorize;
 use comfy_table::{Cell, Color, Table};
 use std::fs;
@@ -100,7 +101,7 @@ pub fn get_coin_stats(gold_price: f64, gold_content: f64, purchase_price: f64) -
     }
 }
 
-pub fn get_total_stats(holdings_with_stats: &Vec<(&GoldHolding, GoldHoldingStats)>) -> TotalStats {
+pub fn get_total_stats(holdings_with_stats: &HoldingsWithStats) -> TotalStats {
     let mut total_purchase_price = 0.0;
     let mut total_price_now = 0.0;
     for (holding, stats) in holdings_with_stats {
@@ -117,3 +118,25 @@ pub fn get_total_stats(holdings_with_stats: &Vec<(&GoldHolding, GoldHoldingStats
         total_percentage_change,
     }
 }
+
+pub async fn get_holdings_stats(
+    holdings: Vec<GoldHolding>,
+) -> Result<HoldingsWithStats, Box<dyn std::error::Error>> {
+    let current_price_per_gram: f64 = fetch_gold_price_gbp().await?;
+
+    let holdings_with_stats = holdings
+        .into_iter()
+        .map(|holding| {
+            let stats = get_coin_stats(
+                current_price_per_gram,
+                holding.gold_content,
+                holding.purchase_price,
+            );
+            (holding, stats)
+        })
+        .collect();
+
+    Ok(holdings_with_stats)
+}
+
+// TODO: Split across more than one helper file
