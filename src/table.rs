@@ -1,4 +1,4 @@
-use crate::helpers::get_colored_change_cell;
+use crate::helpers::{format_currency, get_colored_change_cell};
 use crate::types::HoldingsWithStats;
 use comfy_table::{Cell, Table};
 
@@ -25,7 +25,7 @@ pub fn create_detail_table(holdings: HoldingsWithStats) -> Table {
             Cell::new(&holding.purchase_date),
             Cell::new(format!("£{:.2}", holding.purchase_price)),
             Cell::new(format!("£{:.2}", stat.current_price)),
-            get_colored_change_cell(stat.price_change, format!("£{:.2}", stat.price_change)),
+            get_colored_change_cell(stat.price_change, format_currency(stat.price_change)),
             get_colored_change_cell(
                 stat.percentage_change,
                 format!("{:.2}%", stat.percentage_change),
@@ -52,7 +52,11 @@ pub fn create_summary_table(holdings: HoldingsWithStats) -> Table {
             Cell::new(format!("{:.2}", stat.current_price)),
             get_colored_change_cell(
                 stat.price_change,
-                format!("£{:.2}({:.2}%)", stat.price_change, stat.percentage_change),
+                format!(
+                    "{}({:.2}%)",
+                    format_currency(stat.price_change),
+                    stat.percentage_change
+                ),
             ),
         ]);
     }

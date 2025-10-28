@@ -133,4 +133,10 @@ pub fn check_if_empty(holdings: &Vec<GoldHolding>) {
     }
 }
 
+pub fn format_currency(value: f64) -> String {
+    format!("{:+.2}", value)
+        .replace("+", "+£")
+        .replace("-", "-£")
+}
+
 // TODO: Split across more than one helper file
