@@ -1,7 +1,7 @@
 use crate::gold_price::fetch_gold_price_gbp;
 use crate::types::{GoldHolding, GoldHoldingStats, HoldingsWithStats, TotalStats};
 use colored::Colorize;
-use comfy_table::{Cell, Color, Table};
+use comfy_table::{Cell, Color};
 use std::fs;
 use std::io::{self, Write};
 use std::path::PathBuf;
@@ -43,7 +43,6 @@ pub fn save_holdings(holdings: &Vec<GoldHolding>) -> Result<(), Box<dyn std::err
     Ok(())
 }
 
-// Prompt user for input
 pub fn prompt(message: &str) -> Result<String, Box<dyn std::error::Error>> {
     print!("{}", message);
     io::stdout().flush()?;
@@ -53,7 +52,6 @@ pub fn prompt(message: &str) -> Result<String, Box<dyn std::error::Error>> {
     Ok(input.trim().to_string())
 }
 
-// TODO: minus sign should be before the £ sign.
 pub fn get_colored_change_cell(price_change: f64, string: String) -> Cell {
     let mut cell = Cell::new(string);
 
@@ -65,8 +63,6 @@ pub fn get_colored_change_cell(price_change: f64, string: String) -> Cell {
 
     cell
 }
-
-// TODO: minus sign should be before the £ sign.
 pub fn get_colored_text(value: f64, text: &str) -> String {
     if value >= 0.0 {
         text.green().to_string()
@@ -90,19 +86,21 @@ pub fn get_coin_stats(gold_price: f64, gold_content: f64, purchase_price: f64) -
 pub fn get_total_stats(holdings_with_stats: &HoldingsWithStats) -> TotalStats {
     let mut total_purchase_price = 0.0;
     let mut total_price_now = 0.0;
+    let mut total_weight = 0.0;
     for (holding, stats) in holdings_with_stats {
         total_purchase_price += holding.purchase_price;
+        total_weight += holding.gold_content;
         total_price_now += stats.current_price;
-    } // TODO: change so that total_price_now multiplies total_weight by current price for lesser error.
-      // TODO: return total_weight too
+    }
     let total_price_change = total_price_now - total_purchase_price;
     let total_percentage_change = (total_price_change / total_purchase_price) * 100.00;
     let number_of_assets = holdings_with_stats.len() as u16;
     TotalStats {
-        total_purchase_price,
+        total_price_now,
         total_price_change,
         total_percentage_change,
         number_of_assets,
+        total_weight,
     }
 }
 

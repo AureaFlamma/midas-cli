@@ -14,7 +14,7 @@ pub fn create_detail_table(holdings: HoldingsWithStats) -> Table {
         "Current Price (£)",
         "Price change (£)",
         "Price change (%)",
-    ]); // TODO: Abstract to constants
+    ]);
 
     for (holding, stat) in &holdings {
         detail_table.add_row(vec![

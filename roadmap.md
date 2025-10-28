@@ -9,8 +9,8 @@
 7. Clean up both tables
   - address TODO comments
   - Revamp asset ID
-  - Colour for summary table
-  - Better colour for overall summary
+  - Colour for summary table ✅
+  - Better colour for overall summary ✅
   - Styling: either MD, or bold headings
   
 6. Other controls (perhaps with dashboard thing)

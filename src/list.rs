@@ -12,10 +12,11 @@ pub async fn list_holdings(detail: bool) -> Result<(), Box<dyn std::error::Error
     let holdings_with_stats = get_holdings_stats(holdings).await?;
 
     let TotalStats {
-        total_purchase_price,
+        total_price_now,
         total_price_change,
         total_percentage_change,
         number_of_assets,
+        total_weight,
     } = get_total_stats(&holdings_with_stats);
 
     let table = if detail {
@@ -25,8 +26,9 @@ pub async fn list_holdings(detail: bool) -> Result<(), Box<dyn std::error::Error
     };
 
     println!("\n{}", table);
-    println!("\nTotal Holdings: {}", number_of_assets);
-    println!("Total Investment: £{:.2}", total_purchase_price);
+    println!("\nTotal Holdings: {} pieces", number_of_assets);
+    println!("\nTotal weight: {:.2}g of gold", total_weight);
+    println!("Total Investment: £{:.2}", total_price_now);
     println!(
         "Total change: {}({})",
         get_colored_text(total_price_change, &format!("£{:.2}", total_price_change)),

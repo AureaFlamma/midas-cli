@@ -19,10 +19,11 @@ pub struct GoldHoldingStats {
 
 #[derive(Debug)]
 pub struct TotalStats {
-    pub total_purchase_price: f64,
+    pub total_price_now: f64,
     pub total_price_change: f64,
     pub total_percentage_change: f64,
     pub number_of_assets: u16,
+    pub total_weight: f64,
 }
 
 pub type HoldingsWithStats = Vec<(GoldHolding, GoldHoldingStats)>;
