@@ -2,6 +2,7 @@ use crate::coin_types::select_coin_type;
 use crate::helpers::{load_holdings, prompt, save_holdings};
 use crate::types::GoldHolding;
 use crate::uid::construct_uid;
+use crate::constants::MINIMUM_COIN_YEAR;
 use chrono::{Datelike, NaiveDate, Utc};
 
 // Add a new holding interactively
@@ -11,15 +12,13 @@ pub fn add_holding() -> Result<(), Box<dyn std::error::Error>> {
     // Get coin type with interactive selection
     let (coin_type, gold_content, code) = select_coin_type()?;
 
-    let coin_year: i32 = loop {
+    let coin_year: u32 = loop {
         let year_str = prompt("Mint year: ")?;
 
         // Get current year
-        let current_year = Utc::now().year();
-        let minimum_year = 1650; // TODO: abstract into a constants file.
-                                 // Validate year is a 4-digit number within valid range
-        match year_str.parse::<i32>() {
-            Ok(year) if year >= minimum_year && year <= current_year => break year,
+        let current_year: u32 = Utc::now().year().try_into().unwrap();
+        match year_str.parse::<u32>() {
+            Ok(year) if year >= MINIMUM_COIN_YEAR && year <= current_year => break year,
             Ok(year) if year > current_year => {
                 println!(
                     "Invalid year. Year cannot be in the future (max: {})",

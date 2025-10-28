@@ -18,3 +18,5 @@ pub const COIN_TYPES: &[(&str, f64, &str)] = &[
     ("Chinese Panda", 30.00, "pan"),
     ("Australian Kangaroo", 31.10, "kan"),
 ]; // maybe a struct would be better - explicit labelling?
+
+pub const MINIMUM_COIN_YEAR: u32 = 1650;
