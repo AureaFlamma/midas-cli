@@ -1,14 +1,11 @@
-use crate::helpers::{get_colored_text, get_holdings_stats, get_total_stats, load_holdings};
+use crate::helpers::{check_if_empty, get_colored_text, get_holdings_stats, get_total_stats, load_holdings};
 use crate::table::{create_detail_table, create_summary_table};
 use crate::types::TotalStats;
 
 pub async fn list_holdings(detail: bool) -> Result<(), Box<dyn std::error::Error>> {
     let holdings = load_holdings()?;
 
-    if holdings.is_empty() {
-        println!("No holdings found. Use 'midas add' to add your first holding.");
-        return Ok(());
-    };
+    check_if_empty(&holdings);
 
     let holdings_with_stats = get_holdings_stats(holdings).await?;
 
