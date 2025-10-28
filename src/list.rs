@@ -1,19 +1,14 @@
-use crate::gold_price::fetch_gold_price_gbp;
-use crate::helpers::{
-    get_coin_stats, get_colored_text, get_holdings_stats, get_percentage_cell, get_price_cell,
-    get_total_stats, load_holdings,
-};
+use crate::helpers::{get_colored_text, get_holdings_stats, get_total_stats, load_holdings};
+use crate::table::{create_detail_table, create_summary_table};
 use crate::types::TotalStats;
-use comfy_table::{Cell, Color, Table};
 
-// List all holdings in a table
 pub async fn list_holdings(detail: bool) -> Result<(), Box<dyn std::error::Error>> {
     let holdings = load_holdings()?;
 
     if holdings.is_empty() {
         println!("No holdings found. Use 'midas add' to add your first holding.");
         return Ok(());
-    } // TODO: Abstract into warning function or change load_holdings to print from within the function
+    };
 
     let holdings_with_stats = get_holdings_stats(holdings).await?;
 
@@ -21,63 +16,17 @@ pub async fn list_holdings(detail: bool) -> Result<(), Box<dyn std::error::Error
         total_purchase_price,
         total_price_change,
         total_percentage_change,
+        number_of_assets,
     } = get_total_stats(&holdings_with_stats);
 
-    // TODO: This can be abstracted. Maybe instread of if-statement, do if-expression?
-    if detail {
-        let mut detail_table = Table::new();
-        detail_table.set_header(vec![
-            "Asset ID",
-            "Coin Type",
-            "Coin year",
-            "Gold weight (g)",
-            "Purchase Date",
-            "Purchase Price (£)",
-            "Current Price (£)",
-            "Price change (£)",
-            "Price change (%)",
-        ]);
-
-        for (holding, stat) in &holdings_with_stats {
-            // TODO: destructure holding
-            // FIXME: Mixing calculating logic and add-to-table logic.
-
-            detail_table.add_row(vec![
-                Cell::new(&holding.uid),
-                Cell::new(&holding.coin_type),
-                Cell::new(&holding.coin_year.to_string()),
-                Cell::new(&format!("{:.2}", holding.gold_content)),
-                Cell::new(&holding.purchase_date),
-                Cell::new(&format!("£{:.2}", holding.purchase_price)),
-                Cell::new(&format!("£{:.2}", stat.current_price)),
-                get_price_cell(stat.price_change),
-                get_percentage_cell(stat.percentage_change),
-            ]);
-        }
-
-        println!("\n{}", detail_table);
+    let table = if detail {
+        create_detail_table(holdings_with_stats)
     } else {
-        let mut summary_table = Table::new();
-        summary_table.set_header(vec![
-            "Asset ID",
-            "Au content (g)",
-            "Current Price (£)",
-            "Price change",
-        ]);
+        create_summary_table(holdings_with_stats)
+    };
 
-        for (holding, stat) in &holdings_with_stats {
-            summary_table.add_row(vec![
-                &holding.uid,
-                &format!("{:.2}", holding.gold_content),
-                &format!("{:.2}", stat.current_price),
-                &format!("£{:.2}({:.2}%)", stat.price_change, stat.percentage_change),
-            ]);
-        }
-
-        println!("\n{}", summary_table);
-    }
-
-    println!("\nTotal Holdings: {}", holdings_with_stats.len());
+    println!("\n{}", table);
+    println!("\nTotal Holdings: {}", number_of_assets);
     println!("Total Investment: £{:.2}", total_purchase_price);
     println!(
         "Total change: {}({})",

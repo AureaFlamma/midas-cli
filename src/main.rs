@@ -5,6 +5,7 @@ mod coin_types;
 mod gold_price;
 mod helpers;
 mod list;
+mod table;
 mod types;
 mod uid;
 

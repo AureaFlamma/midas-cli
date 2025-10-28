@@ -111,11 +111,12 @@ pub fn get_total_stats(holdings_with_stats: &HoldingsWithStats) -> TotalStats {
       // TODO: return total_weight too
     let total_price_change = total_price_now - total_purchase_price;
     let total_percentage_change = (total_price_change / total_purchase_price) * 100.00;
-
+    let number_of_assets = holdings_with_stats.len() as u16;
     TotalStats {
         total_purchase_price,
         total_price_change,
         total_percentage_change,
+        number_of_assets,
     }
 }
 
