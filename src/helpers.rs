@@ -53,10 +53,9 @@ pub fn prompt(message: &str) -> Result<String, Box<dyn std::error::Error>> {
     Ok(input.trim().to_string())
 }
 
-pub fn get_price_cell(price_change: f64) -> Cell {
-    // TODO: minus sign should be before the £ sign.
-    let text = format!("£{:.2}", price_change);
-    let mut cell = Cell::new(text);
+// TODO: minus sign should be before the £ sign.
+pub fn get_colored_change_cell(price_change: f64, string: String) -> Cell {
+    let mut cell = Cell::new(string);
 
     if price_change > 0.0 {
         cell = cell.fg(Color::Green);
@@ -67,19 +66,6 @@ pub fn get_price_cell(price_change: f64) -> Cell {
     cell
 }
 
-// TODO: These 2 functions differ with position of 1 character only. Construct into one function
-pub fn get_percentage_cell(price_change: f64) -> Cell {
-    let text = format!("{:.2}%", price_change);
-    let mut cell = Cell::new(text);
-
-    if price_change > 0.0 {
-        cell = cell.fg(Color::Green);
-    } else if price_change < 0.0 {
-        cell = cell.fg(Color::Red);
-    }
-
-    cell
-}
 // TODO: minus sign should be before the £ sign.
 pub fn get_colored_text(value: f64, text: &str) -> String {
     if value >= 0.0 {

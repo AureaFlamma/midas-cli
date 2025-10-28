@@ -1,4 +1,4 @@
-use crate::helpers::{get_percentage_cell, get_price_cell};
+use crate::helpers::get_colored_change_cell;
 use crate::types::HoldingsWithStats;
 use comfy_table::{Cell, Table};
 
@@ -25,8 +25,11 @@ pub fn create_detail_table(holdings: HoldingsWithStats) -> Table {
             Cell::new(&holding.purchase_date),
             Cell::new(format!("£{:.2}", holding.purchase_price)),
             Cell::new(format!("£{:.2}", stat.current_price)),
-            get_price_cell(stat.price_change),
-            get_percentage_cell(stat.percentage_change),
+            get_colored_change_cell(stat.price_change, format!("£{:.2}", stat.price_change)),
+            get_colored_change_cell(
+                stat.percentage_change,
+                format!("{:.2}%", stat.percentage_change),
+            ),
         ]);
     }
 
@@ -44,10 +47,13 @@ pub fn create_summary_table(holdings: HoldingsWithStats) -> Table {
 
     for (holding, stat) in &holdings {
         summary_table.add_row(vec![
-            &holding.uid,
-            &format!("{:.2}", holding.gold_content),
-            &format!("{:.2}", stat.current_price),
-            &format!("£{:.2}({:.2}%)", stat.price_change, stat.percentage_change),
+            Cell::new(&holding.uid),
+            Cell::new(format!("{:.2}", holding.gold_content)),
+            Cell::new(format!("{:.2}", stat.current_price)),
+            get_colored_change_cell(
+                stat.price_change,
+                format!("£{:.2}({:.2}%)", stat.price_change, stat.percentage_change),
+            ),
         ]);
     }
 
