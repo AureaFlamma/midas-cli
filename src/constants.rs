@@ -9,14 +9,14 @@
  * Rust requires explicit type annotation for const and static items.
  */
 pub const COIN_TYPES: &[(&str, f64, &str)] = &[
-    ("Sovereign", 7.32, "sov"), // grams of gold
-    ("Britannia", 31.10, "brt"),
-    ("Krugerrand", 33.93, "kur"),
-    ("American Eagle", 33.93, "eag"),
-    ("Canadian Maple Leaf", 31.10, "mpl"),
-    ("Austrian Philharmonic", 31.10, "phi"),
-    ("Chinese Panda", 30.00, "pan"),
-    ("Australian Kangaroo", 31.10, "kan"),
+    ("Sovereign", 7.32, "sovereign"), // grams of gold
+    ("Britannia", 31.10, "britannia"),
+    ("Krugerrand", 33.93, "kurgerrand"),
+    ("American Eagle", 33.93, "eagle"),
+    ("Canadian Maple Leaf", 31.10, "maple"),
+    ("Austrian Philharmonic", 31.10, "philharmonic"),
+    ("Chinese Panda", 30.00, "panda"),
+    ("Australian Kangaroo", 31.10, "kangaroo"),
 ]; // maybe a struct would be better - explicit labelling?
 
 pub const MINIMUM_COIN_YEAR: u32 = 1650;
