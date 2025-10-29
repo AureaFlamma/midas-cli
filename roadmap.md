@@ -11,11 +11,19 @@
   - Revamp asset ID ✅
   - Colour for summary table ✅
   - Better colour for overall summary ✅
-  - Styling: either MD, or bold headings
+  - Styling: either MD, or bold headings ✅
   
-6. Other controls (perhaps with dashboard thing)
-  a. Delete holding
-  b. Reorder holdings
-  c. Sort holdings
-5. Migrate to database.
-7. Multi-metal
+8. Other controls
+  a. Delete holding:
+    -  by name
+    - with menu
+  b. Sort by
+9. Request caching
+10. Migrate to database.
+11. Multi-metal
+12. Multi-vault
+13. Styling revamp:
+  - different table style. for example, no lines, but bold headers
+  - different summary style. Bold key names?
+  - 
+14. Add note

@@ -124,9 +124,9 @@ pub async fn get_holdings_stats(
     Ok(holdings_with_stats)
 }
 
-pub fn check_if_empty(holdings: &Vec<GoldHolding>) {
+pub fn check_if_empty(holdings: &Vec<GoldHolding>, message: &str) {
     if holdings.is_empty() {
-        println!("No holdings found. Use 'midas add' to add your first holding.");
+        println!(message);
         std::process::exit(0);
     }
 }
