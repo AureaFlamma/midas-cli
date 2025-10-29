@@ -1,6 +1,7 @@
 use crate::helpers::{format_currency, get_colored_change_cell};
 use crate::types::HoldingsWithStats;
 use comfy_table::{Cell, Table};
+use comfy_table::presets::ASCII_MARKDOWN;
 
 pub fn create_detail_table(holdings: HoldingsWithStats) -> Table {
     let mut detail_table = Table::new();
@@ -14,7 +15,7 @@ pub fn create_detail_table(holdings: HoldingsWithStats) -> Table {
         "Current Price (£)",
         "Price change (£)",
         "Price change (%)",
-    ]);
+    ]).load_preset(ASCII_MARKDOWN);
 
     for (holding, stat) in &holdings {
         detail_table.add_row(vec![
@@ -43,7 +44,7 @@ pub fn create_summary_table(holdings: HoldingsWithStats) -> Table {
         "Au content (g)",
         "Current Price (£)",
         "Price change",
-    ]);
+    ]).load_preset(ASCII_MARKDOWN);
 
     for (holding, stat) in &holdings {
         summary_table.add_row(vec![
