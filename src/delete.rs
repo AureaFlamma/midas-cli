@@ -15,10 +15,10 @@ pub fn delete_holdings(ids: Vec<String>) -> Result<(), Box<dyn std::error::Error
     if holdings_after_deletion.len() == holdings.len() {
         println!("One or more of the specified IDs do not belong to any assets"); // TODO: Make a specfic message for each ID.
 
-        return Ok(());
+        Ok(())
     } else {
         save_holdings(&holdings_after_deletion)?; //TODO: success message
-        return Ok(());
+        Ok(())
     }
 }
 
@@ -34,11 +34,7 @@ pub fn get_deletion_input() -> Result<Vec<String>, Box<dyn std::error::Error>> {
 }
 
 pub fn delete_holdings_without_args() -> Result<(), Box<dyn std::error::Error>> {
-
-    let selected_ids = match get_deletion_input() {
-        Ok(ids) => ids,
-        Err(e) => {return Err(e)}
-    };
+    let selected_ids = get_deletion_input()?;
 
     delete_holdings(selected_ids)
 }
