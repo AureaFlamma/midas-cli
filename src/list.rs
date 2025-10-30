@@ -7,7 +7,10 @@ use crate::types::TotalStats;
 pub async fn list_holdings(detail: bool) -> Result<(), Box<dyn std::error::Error>> {
     let holdings = load_holdings()?;
 
-    check_if_empty(&holdings, "No holdings found. Use 'midas add' to add your first holding.");
+    check_if_empty(
+        &holdings,
+        "No holdings found. Use 'midas add' to add your first holding.",
+    );
 
     let holdings_with_stats = get_holdings_stats(holdings).await?;
 

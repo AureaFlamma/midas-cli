@@ -16,14 +16,14 @@ pub fn select_coin_type() -> Result<(String, f64, String), Box<dyn std::error::E
     if selection == "Other (custom)" {
         let custom_name = Text::new("Enter custom coin type:").prompt()?;
 
-let custom_code = custom_name
-    .split(|c: char| !c.is_alphanumeric())
-    .find(|s| !s.is_empty()) 
-    .unwrap_or("unnamed")
-    .chars()
-    .take(10)
-    .collect::<String>()
-    .to_lowercase();
+        let custom_code = custom_name
+            .split(|c: char| !c.is_alphanumeric())
+            .find(|s| !s.is_empty())
+            .unwrap_or("unnamed")
+            .chars()
+            .take(10)
+            .collect::<String>()
+            .to_lowercase();
 
         // Get custom gold content
         let custom_grams = loop {

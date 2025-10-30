@@ -1,8 +1,8 @@
 use crate::coin_types::select_coin_type;
+use crate::constants::MINIMUM_COIN_YEAR;
 use crate::helpers::{load_holdings, prompt, save_holdings};
 use crate::types::GoldHolding;
 use crate::uid::construct_uid;
-use crate::constants::MINIMUM_COIN_YEAR;
 use chrono::{Datelike, NaiveDate, Utc};
 
 // Add a new holding interactively

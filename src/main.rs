@@ -3,6 +3,7 @@ use clap::{Parser, Subcommand};
 mod add;
 mod coin_types;
 mod constants;
+mod delete;
 mod gold_price;
 mod helpers;
 mod list;
@@ -11,6 +12,7 @@ mod types;
 mod uid;
 
 use add::add_holding;
+use delete::{delete_holdings, delete_holdings_without_args};
 use dotenv::dotenv;
 use list::list_holdings;
 
@@ -32,6 +34,9 @@ enum Commands {
         #[arg(short, long)]
         detail: bool,
     },
+    Delete {
+        ids: Option<Vec<String>>,
+    },
 }
 #[tokio::main]
 async fn main() {
@@ -52,5 +57,19 @@ async fn main() {
                 std::process::exit(1);
             }
         }
+        Commands::Delete { ids } => match ids {
+            Some(ids) => {
+                if let Err(e) = delete_holdings(ids) {
+                    eprintln!("Error deleting holding: {}", e);
+                    std::process::exit(1);
+                }
+            }
+            None => {
+                if let Err(e) = delete_holdings_without_args() {
+                    eprintln!("Error deleting holding: {}", e);
+                    std::process::exit(1);
+                }
+            }
+        },
     }
 }

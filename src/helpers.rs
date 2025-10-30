@@ -126,7 +126,7 @@ pub async fn get_holdings_stats(
 
 pub fn check_if_empty(holdings: &Vec<GoldHolding>, message: &str) {
     if holdings.is_empty() {
-        println!(message);
+        println!("{}", message);
         std::process::exit(0);
     }
 }
