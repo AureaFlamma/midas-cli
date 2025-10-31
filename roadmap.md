@@ -15,9 +15,9 @@
   
 8. Other controls
   a. Delete holding:
-    -  by name
-    - with menu
-  b. Sort by
+    - by name ✅
+    - with menu ✅
+  b. Sort by - to do after database
 9. Request caching
 10. Migrate to database.
 11. Multi-metal

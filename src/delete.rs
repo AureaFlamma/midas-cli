@@ -10,9 +10,8 @@ pub fn delete_holdings(ids: Vec<String>) -> Result<(), Box<dyn std::error::Error
 
     let holdings_ids: Vec<String> = holdings.iter().map(|h| h.uid.clone()).collect();
 
-    let (valid_ids, invalid_ids): (Vec<String>, Vec<String>) = ids
-        .into_iter()
-        .partition(|id| holdings_ids.contains(id));
+    let (valid_ids, invalid_ids): (Vec<String>, Vec<String>) =
+        ids.into_iter().partition(|id| holdings_ids.contains(id));
 
     if valid_ids.is_empty() {
         println!("None of the specified IDs belong to any asset. No assets will be deleted");
