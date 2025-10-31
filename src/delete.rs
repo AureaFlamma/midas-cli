@@ -2,6 +2,8 @@ use crate::constants::PAGE_LENGTH_DELETION_OPTIONS;
 use crate::helpers::{check_if_empty, load_holdings, save_holdings};
 use inquire::MultiSelect;
 
+// TODO: Currently delete_holdings needlessly validates ids even when passed ids from get_deletion_input.
+// Perhaps validation logic can be abstracted and called conditionally with prop
 pub fn delete_holdings(ids: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
     let holdings = load_holdings()?;
     check_if_empty(&holdings, "No holdings found. Nothing to delete.");
@@ -27,6 +29,7 @@ pub fn delete_holdings(ids: Vec<String>) -> Result<(), Box<dyn std::error::Error
     }
 
     save_holdings(&holdings_after_deletion)?;
+    println!("Deleted assets: {}", valid_ids.join(", "));
     Ok(())
 }
 
