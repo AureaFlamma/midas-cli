@@ -20,3 +20,5 @@ pub const COIN_TYPES: &[(&str, f64, &str)] = &[
 ]; // maybe a struct would be better - explicit labelling?
 
 pub const MINIMUM_COIN_YEAR: u32 = 1650;
+
+pub const PAGE_LENGTH_DELETION_OPTIONS: usize = 30;
