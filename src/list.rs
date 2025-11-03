@@ -1,7 +1,5 @@
-use crate::helpers::{
-    check_if_empty, get_colored_text, get_holdings_stats, get_total_stats,
-};
 use crate::database::load_holdings;
+use crate::helpers::{check_if_empty, get_colored_text, get_holdings_stats, get_total_stats};
 use crate::table::{create_detail_table, create_summary_table};
 use crate::types::TotalStats;
 

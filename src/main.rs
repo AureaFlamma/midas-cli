@@ -3,6 +3,7 @@ use clap::{Parser, Subcommand};
 mod add;
 mod coin_types;
 mod constants;
+mod database;
 mod delete;
 mod gold_price;
 mod helpers;
@@ -10,7 +11,6 @@ mod list;
 mod table;
 mod types;
 mod uid;
-mod database;
 
 use add::add_holding;
 use delete::{delete_holdings, delete_holdings_without_args};

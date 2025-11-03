@@ -3,16 +3,6 @@ use crate::types::{GoldHolding, GoldHoldingStats, HoldingsWithStats, TotalStats}
 use colored::Colorize;
 use comfy_table::{Cell, Color};
 use std::io::{self, Write};
-use crate::database::save_holding;
-
-
-pub fn save_holdings(holdings: &Vec<GoldHolding>) -> Result<(), Box<dyn std::error::Error>> {
-    // TODO: migrate to database file; make more efficient
-    for holding in holdings {
-        save_holding(holding)?;
-    }
-    Ok(())
-}
 
 pub fn prompt(message: &str) -> Result<String, Box<dyn std::error::Error>> {
     print!("{}", message);

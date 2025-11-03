@@ -14,7 +14,7 @@ pub fn get_db_path() -> PathBuf {
 
 pub fn init_db() -> Result<Connection> {
     let db_path = get_db_path();
-    
+
     // Create directory if it doesn't exist
     if let Some(parent) = db_path.parent() {
         std::fs::create_dir_all(parent).map_err(|e| {
@@ -26,7 +26,7 @@ pub fn init_db() -> Result<Connection> {
     }
 
     let conn = Connection::open(db_path)?;
-    
+
     conn.execute(
         "CREATE TABLE IF NOT EXISTS holdings (
             uid TEXT PRIMARY KEY,
@@ -38,19 +38,18 @@ pub fn init_db() -> Result<Connection> {
         )",
         [],
     )?;
-    
+
     Ok(conn)
 }
-
 
 // Load holdings from JSON file
 pub fn load_holdings() -> Result<Vec<GoldHolding>, Box<dyn std::error::Error>> {
     let conn = init_db()?;
-    
+
     let mut stmt = conn.prepare(
         "SELECT uid, coin_type, coin_year, gold_content, purchase_date, purchase_price FROM holdings"
     )?;
-    
+
     let holding_iter = stmt.query_map([], |row| {
         Ok(GoldHolding {
             uid: row.get(0)?,
@@ -61,19 +60,19 @@ pub fn load_holdings() -> Result<Vec<GoldHolding>, Box<dyn std::error::Error>> {
             purchase_price: row.get(5)?,
         })
     })?;
-    
+
     let mut holdings = Vec::new();
     for holding in holding_iter {
         holdings.push(holding?);
     }
-    
+
     Ok(holdings)
 }
 
 // Save holdings to JSON file
 pub fn save_holding(holding: &GoldHolding) -> Result<(), Box<dyn std::error::Error>> {
     let conn = init_db()?;
-    
+
     conn.execute(
         "INSERT INTO holdings (uid, coin_type, coin_year, gold_content, purchase_date, purchase_price)
          VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
@@ -86,17 +85,17 @@ pub fn save_holding(holding: &GoldHolding) -> Result<(), Box<dyn std::error::Err
             holding.purchase_price
         ],
     )?;
-    
+
     Ok(())
 }
 
 pub fn delete_holdings_from_db(ids: &[String]) -> Result<(), Box<dyn std::error::Error>> {
     let conn = init_db()?;
-    
+
     for id in ids {
         conn.execute("DELETE FROM holdings WHERE uid = ?1", params![id])?;
     }
-    
+
     Ok(())
 }
 

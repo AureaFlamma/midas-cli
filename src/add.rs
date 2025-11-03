@@ -1,7 +1,7 @@
 use crate::coin_types::select_coin_type;
 use crate::constants::MINIMUM_COIN_YEAR;
-use crate::helpers::prompt;
 use crate::database::save_holding;
+use crate::helpers::prompt;
 use crate::types::GoldHolding;
 use crate::uid::construct_uid;
 use chrono::{Datelike, NaiveDate, Utc};
