@@ -90,7 +90,7 @@ pub fn save_holding(holding: &GoldHolding) -> Result<(), Box<dyn std::error::Err
     Ok(())
 }
 
-pub fn delete_holdings(ids: &[String]) -> Result<(), Box<dyn std::error::Error>> {
+pub fn delete_holdings_from_db(ids: &[String]) -> Result<(), Box<dyn std::error::Error>> {
     let conn = init_db()?;
     
     for id in ids {
