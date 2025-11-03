@@ -18,12 +18,13 @@
     - by name ✅
     - with menu ✅
   b. Sort by - to do after database
-9. Request caching
+9. Request caching ✅
 10. Migrate to database.
-11. Multi-metal
-12. Multi-vault
-13. Styling revamp:
+11. Address all TODO: comments
+12. Folder structure (esp. helpers)
+13. Multi-metal
+14. Multi-vault
+15. Styling revamp:
   - different table style. for example, no lines, but bold headers
   - different summary style. Bold key names?
-  - 
-14. Add note
+16. Add note

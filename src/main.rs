@@ -3,6 +3,7 @@ use clap::{Parser, Subcommand};
 mod add;
 mod coin_types;
 mod constants;
+mod database;
 mod delete;
 mod gold_price;
 mod helpers;

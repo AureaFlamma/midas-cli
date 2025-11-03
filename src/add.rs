@@ -1,6 +1,7 @@
 use crate::coin_types::select_coin_type;
 use crate::constants::MINIMUM_COIN_YEAR;
-use crate::helpers::{load_holdings, prompt, save_holdings};
+use crate::database::save_holding;
+use crate::helpers::prompt;
 use crate::types::GoldHolding;
 use crate::uid::construct_uid;
 use chrono::{Datelike, NaiveDate, Utc};
@@ -61,17 +62,9 @@ pub fn add_holding() -> Result<(), Box<dyn std::error::Error>> {
         purchase_price,
     };
 
-    // Load existing holdings
-    let mut holdings = load_holdings()?;
-
-    // Add new holding
-    holdings.push(new_holding);
-
-    // Save back to file
-    save_holdings(&holdings)?;
+    save_holding(&new_holding)?;
 
     println!("\n✓ Holding added successfully!");
-    println!("Total holdings: {}", holdings.len());
 
     Ok(())
 }

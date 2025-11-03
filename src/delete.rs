@@ -1,5 +1,6 @@
 use crate::constants::PAGE_LENGTH_DELETION_OPTIONS;
-use crate::helpers::{check_if_empty, load_holdings, save_holdings};
+use crate::database::{delete_holdings_from_db, load_holdings};
+use crate::helpers::check_if_empty;
 use inquire::MultiSelect;
 
 // TODO: Currently delete_holdings needlessly validates ids even when passed ids from get_deletion_input.
@@ -18,16 +19,11 @@ pub fn delete_holdings(ids: Vec<String>) -> Result<(), Box<dyn std::error::Error
         return Ok(());
     }
 
-    let holdings_after_deletion: Vec<_> = holdings
-        .into_iter()
-        .filter(|h| !valid_ids.contains(&h.uid))
-        .collect();
-
     if !invalid_ids.is_empty() {
         println!("Ids {} not found", invalid_ids.join(", "));
     }
 
-    save_holdings(&holdings_after_deletion)?;
+    delete_holdings_from_db(&valid_ids)?;
     println!("Deleted assets: {}", valid_ids.join(", "));
     Ok(())
 }
