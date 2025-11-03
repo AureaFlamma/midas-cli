@@ -17,14 +17,14 @@
   a. Delete holding:
     - by name ✅
     - with menu ✅
-  b. Sort by - to do after database
 9. Request caching ✅
-10. Migrate to database.
+10. Migrate to database. ✅
 11. Address all TODO: comments
 12. Folder structure (esp. helpers)
-13. Multi-metal
-14. Multi-vault
-15. Styling revamp:
+13. Implement sort by
+14. Multi-metal
+15. Multi-vault
+16. Styling revamp:
   - different table style. for example, no lines, but bold headers
   - different summary style. Bold key names?
-16. Add note
+17. Add note

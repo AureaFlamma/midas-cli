@@ -6,7 +6,7 @@ pub struct GoldHolding {
     pub coin_type: String,
     pub uid: String,
     pub gold_content: f64,
-    pub coin_year: u32,
+    pub coin_year: String,
     pub purchase_date: String,
     pub purchase_price: f64,
 }
