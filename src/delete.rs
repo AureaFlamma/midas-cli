@@ -1,5 +1,6 @@
 use crate::constants::PAGE_LENGTH_DELETION_OPTIONS;
-use crate::helpers::{check_if_empty, load_holdings, save_holdings};
+use crate::helpers::{check_if_empty, save_holdings};
+use crate::database::load_holdings;
 use inquire::MultiSelect;
 
 // TODO: Currently delete_holdings needlessly validates ids even when passed ids from get_deletion_input.

@@ -10,6 +10,7 @@ mod list;
 mod table;
 mod types;
 mod uid;
+mod database;
 
 use add::add_holding;
 use delete::{delete_holdings, delete_holdings_without_args};
