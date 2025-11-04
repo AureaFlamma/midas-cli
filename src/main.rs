@@ -13,7 +13,7 @@ mod types;
 mod uid;
 
 use add::add_holding;
-use delete::{delete_holdings, delete_holdings_without_args};
+use delete::{delete_holdings_with_args, delete_holdings_without_args};
 use dotenv::dotenv;
 use list::list_holdings;
 
@@ -60,7 +60,7 @@ async fn main() {
         }
         Commands::Delete { ids } => match ids {
             Some(ids) => {
-                if let Err(e) = delete_holdings(ids) {
+                if let Err(e) = delete_holdings_with_args(ids) {
                     eprintln!("Error deleting holding: {}", e);
                     std::process::exit(1);
                 }

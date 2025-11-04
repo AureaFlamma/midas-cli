@@ -1,30 +1,13 @@
 use crate::constants::PAGE_LENGTH_DELETION_OPTIONS;
 use crate::database::{delete_holdings_from_db, load_holdings};
 use crate::helpers::check_if_empty;
+use crate::types::GoldHolding;
 use inquire::MultiSelect;
 
-// TODO: Currently delete_holdings needlessly validates ids even when passed ids from get_deletion_input.
-// Perhaps validation logic can be abstracted and called conditionally with prop
 pub fn delete_holdings(ids: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
-    let holdings = load_holdings()?;
-    check_if_empty(&holdings, "No holdings found. Nothing to delete.");
-
-    let holdings_ids: Vec<String> = holdings.iter().map(|h| h.uid.clone()).collect();
-
-    let (valid_ids, invalid_ids): (Vec<String>, Vec<String>) =
-        ids.into_iter().partition(|id| holdings_ids.contains(id));
-
-    if valid_ids.is_empty() {
-        println!("None of the specified IDs belong to any asset. No assets will be deleted");
-        return Ok(());
-    }
-
-    if !invalid_ids.is_empty() {
-        println!("Ids {} not found", invalid_ids.join(", "));
-    }
-
-    delete_holdings_from_db(&valid_ids)?;
-    println!("Deleted assets: {}", valid_ids.join(", "));
+    delete_holdings_from_db(&ids)?;
+    println!("Deleted assets: {}", ids.join(", "));
+    
     Ok(())
 }
 
@@ -43,8 +26,37 @@ pub fn get_deletion_input() -> Result<Vec<String>, Box<dyn std::error::Error>> {
     }
 }
 
+pub fn validate_deletion_ids(
+    ids: Vec<String>,
+    holdings: Vec<GoldHolding>,
+) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    let holdings_ids: Vec<String> = holdings.iter().map(|h| h.uid.clone()).collect();
+    let (valid_ids, invalid_ids): (Vec<String>, Vec<String>) =
+        ids.into_iter().partition(|id| holdings_ids.contains(id));
+
+    if valid_ids.is_empty() {
+        return Err(
+            "None of the specified IDs belong to any asset. No assets will be deleted".into(),
+        );
+    }
+
+    if !invalid_ids.is_empty() {
+        println!("Ids {} not found", invalid_ids.join(", "));
+    }
+
+    Ok(valid_ids)
+}
+
 pub fn delete_holdings_without_args() -> Result<(), Box<dyn std::error::Error>> {
+    check_if_empty(&load_holdings()?, "No holdings found. Nothing to delete.");
     let selected_ids = get_deletion_input()?;
 
     delete_holdings(selected_ids)
+}
+
+pub fn delete_holdings_with_args(ids: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    let holdings = load_holdings()?;
+    check_if_empty(&holdings, "No holdings found. Nothing to delete.");
+
+    delete_holdings(validate_deletion_ids(ids, holdings)?)
 }
