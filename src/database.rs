@@ -31,7 +31,7 @@ pub fn init_db() -> Result<Connection> {
         "CREATE TABLE IF NOT EXISTS holdings (
             uid TEXT PRIMARY KEY,
             coin_type TEXT NOT NULL,
-            coin_year INTEGER NOT NULL,
+            coin_year TEXT NOT NULL,
             gold_content REAL NOT NULL,
             purchase_date TEXT NOT NULL,
             purchase_price REAL NOT NULL

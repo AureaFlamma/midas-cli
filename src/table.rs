@@ -23,7 +23,7 @@ pub fn create_detail_table(holdings: HoldingsWithStats) -> Table {
         detail_table.add_row(vec![
             Cell::new(&holding.uid),
             Cell::new(&holding.coin_type),
-            Cell::new(holding.coin_year.to_string()),
+            Cell::new(&holding.coin_year),
             Cell::new(format!("{:.2}", holding.gold_content)),
             Cell::new(&holding.purchase_date),
             Cell::new(format!("£{:.2}", holding.purchase_price)),

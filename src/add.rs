@@ -19,7 +19,9 @@ pub fn add_holding() -> Result<(), Box<dyn std::error::Error>> {
         // Get current year
         let current_year: u32 = Utc::now().year().try_into().unwrap();
         match year_str.parse::<u32>() {
-            Ok(year) if year >= MINIMUM_COIN_YEAR && year <= current_year => break year.to_string(),
+            Ok(year) if year >= MINIMUM_COIN_YEAR && year <= current_year => {
+                break year.to_string()
+            }
             Ok(year) if year > current_year => {
                 println!(
                     "Invalid year. Year cannot be in the future (max: {})",
@@ -50,7 +52,7 @@ pub fn add_holding() -> Result<(), Box<dyn std::error::Error>> {
         }
     };
 
-    let uid = construct_uid(&code, &coin_year.to_string()); // TODO: Maybe coin year should be a string in general?
+    let uid = construct_uid(&code, &coin_year.to_string());
 
     // Create new holding
     let new_holding = GoldHolding {
