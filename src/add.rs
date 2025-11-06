@@ -52,7 +52,7 @@ pub fn add_holding() -> Result<(), Box<dyn std::error::Error>> {
         }
     };
 
-    let uid = construct_uid(&code, &coin_year.to_string());
+    let uid = construct_uid(&code, &coin_year.to_string())?;
 
     // Create new holding
     let new_holding = GoldHolding {

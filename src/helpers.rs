@@ -85,7 +85,7 @@ pub async fn get_holdings_stats(
     Ok(holdings_with_stats)
 }
 
-pub fn check_if_empty(holdings: &Vec<GoldHolding>, message: &str) {
+pub fn check_if_empty(holdings: &[GoldHolding], message: &str) {
     if holdings.is_empty() {
         println!("{}", message);
         std::process::exit(0);
@@ -97,5 +97,3 @@ pub fn format_currency(value: f64) -> String {
         .replace("+", "+£")
         .replace("-", "-£")
 }
-
-// TODO: Split across more than one helper file

@@ -7,7 +7,7 @@ use inquire::MultiSelect;
 pub fn delete_holdings(ids: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
     delete_holdings_from_db(&ids)?;
     println!("Deleted assets: {}", ids.join(", "));
-    
+
     Ok(())
 }
 

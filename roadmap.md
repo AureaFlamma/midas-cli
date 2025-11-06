@@ -21,10 +21,11 @@
 10. Migrate to database. ✅
 11. Address all TODO: comments
 12. Folder structure (esp. helpers)
-13. Implement sort by
-14. Multi-metal
-15. Multi-vault
-16. Styling revamp:
+13. Dev script: populate DB
+14. Implement sort by
+15. Multi-metal
+16. Multi-vault
+17. Styling revamp:
   - different table style. for example, no lines, but bold headers
   - different summary style. Bold key names?
-17. Add note
+18. Add note
