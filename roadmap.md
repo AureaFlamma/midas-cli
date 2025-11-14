@@ -19,8 +19,8 @@
     - with menu ✅
 9. Request caching ✅
 10. Migrate to database. ✅
-11. Address all TODO: comments
-12. Folder structure (esp. helpers)
+11. Address all TODO: comments ✅
+12. Folder structure (esp. helpers) ⏸️ - will do later. Not enough files to know what pattern would make sense.
 13. Dev script: populate DB
 14. Implement sort by
 15. Multi-metal

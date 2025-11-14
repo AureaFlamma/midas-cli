@@ -11,11 +11,13 @@ mod list;
 mod table;
 mod types;
 mod uid;
+mod populate_table;
 
 use add::add_holding;
 use delete::{delete_holdings_with_args, delete_holdings_without_args};
 use dotenv::dotenv;
 use list::list_holdings;
+use populate_table::populate_table;
 
 // CLI structure - defines the commands our app accepts
 #[derive(Parser)]
@@ -38,6 +40,7 @@ enum Commands {
     Delete {
         ids: Option<Vec<String>>,
     },
+    Populate,
 }
 #[tokio::main]
 async fn main() {
@@ -70,6 +73,12 @@ async fn main() {
                     eprintln!("Error deleting holding: {}", e);
                     std::process::exit(1);
                 }
+            }
+        }
+                Commands::Populate => {
+                    if let Err(e) = populate_table() {
+                eprintln!("Error populating table: {}", e);
+                std::process::exit(1);
             }
         },
     }
