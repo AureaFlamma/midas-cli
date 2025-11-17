@@ -21,8 +21,9 @@ pub fn populate_table() -> Result<(), Box<dyn std::error::Error>> {
         };
         
         save_holding(&new_holding)?;
-    }; // TODO: Add some sort of confirmation of succesful population
+    };
 
+    println!("Dev data succesfully generated");
 
     Ok(())
 }
