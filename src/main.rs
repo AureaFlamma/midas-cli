@@ -82,7 +82,7 @@ async fn main() {
             }
         }
         Commands::Sort => {
-            if let Err(e) = set_sort_preference() {
+            if let Err(e) = set_sort_preference().await {
                 eprintln!("Error setting sort preference: {}", e);
                 std::process::exit(1);
             }

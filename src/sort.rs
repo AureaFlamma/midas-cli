@@ -1,8 +1,9 @@
 use crate::constants::{DB_COLUMNS, SORT_DIRECTIONS};
 use crate::database::save_sort_preference_to_db;
+use crate::list::list_holdings;
 use inquire::Select;
 
-pub fn set_sort_preference() -> Result<(), Box<dyn std::error::Error>> {
+pub async fn set_sort_preference() -> Result<(), Box<dyn std::error::Error>> {
     let column = select_sort_column()?;
     let direction = select_sort_direction()?;
 
@@ -13,6 +14,8 @@ pub fn set_sort_preference() -> Result<(), Box<dyn std::error::Error>> {
         if direction { "Ascending" } else { "Descending" },
         column
     );
+
+    list_holdings(false).await;
 
     Ok(())
 }
@@ -43,3 +46,4 @@ pub fn select_sort_direction() -> Result<bool, Box<dyn std::error::Error>> {
 }
 
 // TODO: Add capacity for typed arguments with menu arguments as fallback
+// TODO: Add auto-feedback after display
