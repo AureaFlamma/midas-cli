@@ -22,15 +22,30 @@
 11. Address all TODO: comments ✅
 12. Folder structure (esp. helpers) ⏸️ - will do later. Not enough files to know what pattern would make sense.
 13. Dev script: populate DB ✅
-14. Implement sort by 
-15. Multi-metal
-16. Multi-vault
-17. Styling revamp:
+14. Implement sort by ✅
+15. Sort by stats
+16. Delete all
+17. Edit holding
+18. Address comments
+19. Make sure table works from install
+20. Why won't the key work from outside directory?
+21. User-added key.
+22. Package and put online.
+23. Update midas rex 
+===== RELEASE BETA ========
+
+--------------------------------
+
+- Multi-metal
+- Multi-vault
+- Styling revamp:
   - different table style. for example, no lines, but bold headers
   - different summary style. Bold key names?
-18. Add note
-19. Delete all
-20. Beef up stats. Add graphs etc.
-21. Migrate to dashboard style?
-22. Why won't the key work from outside directory?
-23. User-added key.
+- Add note
+- Delete all
+- Beef up stats. Add graphs etc.
+- Migrate to dashboard style?
+
+---------------------------
+
+- other types of assets

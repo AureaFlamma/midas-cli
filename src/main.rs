@@ -90,4 +90,7 @@ async fn main() {
     }
 }
 
-// sort by current price, price change
+// TODO: sort by current price, price change
+// TODO: delete all
+// TODO: Create all the necessary tables whilst installing, so that user doesn't have to
+// e.g. run the sort command before being able to add a holding
