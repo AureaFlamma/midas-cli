@@ -4,7 +4,6 @@ use crate::table::{create_detail_table, create_summary_table};
 use crate::types::TotalStats;
 
 pub async fn list_holdings(detail: bool) -> Result<(), Box<dyn std::error::Error>> {
-    
     let holdings = load_holdings_with_preference()?;
 
     check_if_empty(

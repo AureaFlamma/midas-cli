@@ -21,5 +21,12 @@ pub const COIN_TYPES: &[(&str, f64, &str)] = &[
 pub const MINIMUM_COIN_YEAR: u32 = 1650;
 pub const PAGE_LENGTH_DELETION_OPTIONS: usize = 30;
 pub const PRICE_CACHE_DURATION: u64 = 21_600; // 6h in seconds
-pub const DB_COLUMNS: [&str; 6] = ["uid", "coin_type", "coin_year", "gold_content", "purchase_date", "purchase_price"];
+pub const DB_COLUMNS: [&str; 6] = [
+    "uid",
+    "coin_type",
+    "coin_year",
+    "gold_content",
+    "purchase_date",
+    "purchase_price",
+];
 // TODO: pub const DISPLAY_COLUMNS

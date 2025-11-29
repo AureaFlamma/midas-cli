@@ -2,7 +2,7 @@ use crate::constants::COIN_TYPES;
 use crate::database::save_holding;
 use crate::types::GoldHolding;
 use crate::uid::construct_uid;
-use chrono::{Utc, Datelike};
+use chrono::{Datelike, Utc};
 
 pub fn populate_table() -> Result<(), Box<dyn std::error::Error>> {
     for (coin_type, gold_content, code) in COIN_TYPES {
@@ -10,7 +10,7 @@ pub fn populate_table() -> Result<(), Box<dyn std::error::Error>> {
         let uid = construct_uid(code, &coin_year)?;
         let purchase_date = Utc::now().year().to_string(); // TODO: only saves year. We want the whole date
         let purchase_price = gold_content * 60.00;
-        
+
         let new_holding = GoldHolding {
             uid,
             coin_type: coin_type.to_string(), // FIXME: Sort out types here and in the primary save function
@@ -19,9 +19,9 @@ pub fn populate_table() -> Result<(), Box<dyn std::error::Error>> {
             purchase_date,
             purchase_price,
         };
-        
+
         save_holding(&new_holding)?;
-    };
+    }
 
     println!("Dev data succesfully generated");
 

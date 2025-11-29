@@ -8,11 +8,11 @@ mod delete;
 mod gold_price;
 mod helpers;
 mod list;
+mod populate_table;
+mod sort;
 mod table;
 mod types;
 mod uid;
-mod populate_table;
-mod sort;
 
 use add::add_holding;
 use delete::{delete_holdings_with_args, delete_holdings_without_args};
@@ -77,7 +77,7 @@ async fn main() {
                     std::process::exit(1);
                 }
             }
-        }
+        },
         Commands::Populate => {
             if let Err(e) = populate_table() {
                 eprintln!("Error populating table: {}", e);
