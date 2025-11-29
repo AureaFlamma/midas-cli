@@ -8,16 +8,18 @@ mod delete;
 mod gold_price;
 mod helpers;
 mod list;
+mod populate_table;
+mod sort;
 mod table;
 mod types;
 mod uid;
-mod populate_table;
 
 use add::add_holding;
 use delete::{delete_holdings_with_args, delete_holdings_without_args};
 use dotenv::dotenv;
 use list::list_holdings;
 use populate_table::populate_table;
+use sort::set_sort_preference;
 
 // CLI structure - defines the commands our app accepts
 #[derive(Parser)]
@@ -30,9 +32,7 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Add a new gold holding
     Add,
-    /// List all holdings in a table
     List {
         #[arg(short, long)]
         detail: bool,
@@ -41,13 +41,13 @@ enum Commands {
         ids: Option<Vec<String>>,
     },
     Populate,
+    Sort,
 }
 #[tokio::main]
 async fn main() {
     dotenv().ok();
     let cli = Cli::parse();
 
-    // Execute the appropriate command
     match cli.command {
         Commands::Add => {
             if let Err(e) = add_holding() {
@@ -74,12 +74,23 @@ async fn main() {
                     std::process::exit(1);
                 }
             }
-        }
-                Commands::Populate => {
-                    if let Err(e) = populate_table() {
+        },
+        Commands::Populate => {
+            if let Err(e) = populate_table() {
                 eprintln!("Error populating table: {}", e);
                 std::process::exit(1);
             }
-        },
+        }
+        Commands::Sort => {
+            if let Err(e) = set_sort_preference().await {
+                eprintln!("Error setting sort preference: {}", e);
+                std::process::exit(1);
+            }
+        }
     }
 }
+
+// TODO: sort by current price, price change
+// TODO: delete all
+// TODO: Create all the necessary tables whilst installing, so that user doesn't have to
+// e.g. run the sort command before being able to add a holding
