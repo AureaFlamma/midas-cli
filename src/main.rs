@@ -43,10 +43,7 @@ enum Commands {
         ids: Option<Vec<String>>,
     },
     Populate,
-    Sort {
-        column: String,
-        asc: String,
-    }
+    Sort,
 }
 #[tokio::main]
 async fn main() {
@@ -87,17 +84,8 @@ async fn main() {
                 std::process::exit(1);
             }
         }
-        Commands::Sort { column, asc } => {
-            let ascending = match asc.to_lowercase().as_str() { // Into helper
-                "asc" | "ascending" | "true" => true,
-                "desc" | "descending" | "false" => false,
-                _ => {
-                    eprintln!("Invalid direction '{}'. Use 'asc' or 'desc'", asc);
-                    std::process::exit(1);
-                }
-            };
-            
-            if let Err(e) = set_sort_preference(column, ascending) {
+        Commands::Sort => {
+            if let Err(e) = set_sort_preference() {
                 eprintln!("Error setting sort preference: {}", e);
                 std::process::exit(1);
             }
