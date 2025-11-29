@@ -12,12 +12,14 @@ mod table;
 mod types;
 mod uid;
 mod populate_table;
+mod sort;
 
 use add::add_holding;
 use delete::{delete_holdings_with_args, delete_holdings_without_args};
 use dotenv::dotenv;
 use list::list_holdings;
 use populate_table::populate_table;
+use sort::set_sort_preference;
 
 // CLI structure - defines the commands our app accepts
 #[derive(Parser)]
@@ -41,6 +43,10 @@ enum Commands {
         ids: Option<Vec<String>>,
     },
     Populate,
+    Sort {
+        column: String,
+        asc: String,
+    }
 }
 #[tokio::main]
 async fn main() {
@@ -75,11 +81,28 @@ async fn main() {
                 }
             }
         }
-                Commands::Populate => {
-                    if let Err(e) = populate_table() {
+        Commands::Populate => {
+            if let Err(e) = populate_table() {
                 eprintln!("Error populating table: {}", e);
                 std::process::exit(1);
             }
-        },
+        }
+        Commands::Sort { column, asc } => {
+            let ascending = match asc.to_lowercase().as_str() { // Into helper
+                "asc" | "ascending" | "true" => true,
+                "desc" | "descending" | "false" => false,
+                _ => {
+                    eprintln!("Invalid direction '{}'. Use 'asc' or 'desc'", asc);
+                    std::process::exit(1);
+                }
+            };
+            
+            if let Err(e) = set_sort_preference(column, ascending) {
+                eprintln!("Error setting sort preference: {}", e);
+                std::process::exit(1);
+            }
+        }
     }
 }
+
+// sort by current price, price change

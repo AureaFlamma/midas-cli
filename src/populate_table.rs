@@ -8,7 +8,7 @@ pub fn populate_table() -> Result<(), Box<dyn std::error::Error>> {
     for (coin_type, gold_content, code) in COIN_TYPES {
         let coin_year = 1900.to_string();
         let uid = construct_uid(code, &coin_year)?;
-        let purchase_date = Utc::now().year().to_string();
+        let purchase_date = Utc::now().year().to_string(); // TODO: only saves year. We want the whole date
         let purchase_price = gold_content * 60.00;
         
         let new_holding = GoldHolding {
