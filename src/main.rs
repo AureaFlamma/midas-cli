@@ -32,9 +32,7 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Add a new gold holding
     Add,
-    /// List all holdings in a table
     List {
         #[arg(short, long)]
         detail: bool,
@@ -50,7 +48,6 @@ async fn main() {
     dotenv().ok();
     let cli = Cli::parse();
 
-    // Execute the appropriate command
     match cli.command {
         Commands::Add => {
             if let Err(e) = add_holding() {

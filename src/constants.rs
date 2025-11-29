@@ -30,3 +30,7 @@ pub const DB_COLUMNS: [&str; 6] = [
     "purchase_price",
 ];
 // TODO: pub const DISPLAY_COLUMNS
+pub const SORT_DIRECTIONS: [(&str, bool); 2] = [
+    ("ascending (lowest first)", true),
+    ("descending (highest first)", false),
+];

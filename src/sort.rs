@@ -1,4 +1,4 @@
-use crate::constants::DB_COLUMNS;
+use crate::constants::{DB_COLUMNS, SORT_DIRECTIONS};
 use crate::database::save_sort_preference_to_db;
 use inquire::Select;
 
@@ -27,13 +27,11 @@ pub fn select_sort_column() -> Result<String, Box<dyn std::error::Error>> {
 }
 
 pub fn select_sort_direction() -> Result<bool, Box<dyn std::error::Error>> {
-    // TODO: Ascending/descending into constants,
-    const SORT_DIRECTIONS: [(&str, bool); 2] = [("ascending", true), ("descending", false)];
     let options = SORT_DIRECTIONS.iter().map(|(name, _)| name).collect();
 
     let selection = Select::new("should we sort in ascending or descending order?", options)
         .with_page_size(2)
-        .prompt()?; // <?> What would happen without this?
+        .prompt()?;
 
     for (direction_name, boolean) in SORT_DIRECTIONS {
         if &direction_name == selection {
@@ -45,4 +43,3 @@ pub fn select_sort_direction() -> Result<bool, Box<dyn std::error::Error>> {
 }
 
 // TODO: Add capacity for typed arguments with menu arguments as fallback
-// TODO: Lint on save
