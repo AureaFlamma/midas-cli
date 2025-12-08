@@ -21,6 +21,8 @@ use list::list_holdings;
 use populate_table::populate_table;
 use sort::set_sort_preference;
 
+use crate::database::delete_all_holdings;
+
 // CLI structure - defines the commands our app accepts
 #[derive(Parser)]
 #[command(name = "midas")]
@@ -38,6 +40,9 @@ enum Commands {
         detail: bool,
     },
     Delete {
+        #[arg(short, long, group = "delete_target")]
+        all: bool,
+        #[arg(group = "delete_target")]
         ids: Option<Vec<String>>,
     },
     Populate,
@@ -61,14 +66,20 @@ async fn main() {
                 std::process::exit(1);
             }
         }
-        Commands::Delete { ids } => match ids {
-            Some(ids) => {
+        Commands::Delete { ids, all } => match (all, ids) {
+            (true, _) => {
+                if let Err(e) = delete_all_holdings() {
+                    eprintln!("Error deleting all holdings: {}", e);
+                    std::process::exit(1);
+                }
+            }
+            (false, Some(ids)) => {
                 if let Err(e) = delete_holdings_with_args(ids) {
                     eprintln!("Error deleting holding: {}", e);
                     std::process::exit(1);
                 }
             }
-            None => {
+            (false, None) => {
                 if let Err(e) = delete_holdings_without_args() {
                     eprintln!("Error deleting holding: {}", e);
                     std::process::exit(1);
@@ -89,8 +100,3 @@ async fn main() {
         }
     }
 }
-
-// TODO: sort by current price, price change
-// TODO: delete all
-// TODO: Create all the necessary tables whilst installing, so that user doesn't have to
-// e.g. run the sort command before being able to add a holding

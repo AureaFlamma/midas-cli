@@ -23,15 +23,16 @@
 12. Folder structure (esp. helpers) ⏸️ - will do later. Not enough files to know what pattern would make sense.
 13. Dev script: populate DB ✅
 14. Implement sort by ✅
-15. Sort by stats
-16. Delete all
-17. Edit holding
+15. Delete all
+16. Edit holding
+17. Autocomplete for commands which require typing out of ids
 18. Address comments
-19. Make sure table works from install
-20. Why won't the key work from outside directory?
-21. User-added key.
-22. Package and put online.
-23. Update midas rex 
+19. Folder strucutre
+20. Make sure table works from install
+21. Why won't the key work from outside directory?
+22. User-added key.
+23. Package and put online.
+24. Update midas rex 
 ===== RELEASE BETA ========
 
 --------------------------------

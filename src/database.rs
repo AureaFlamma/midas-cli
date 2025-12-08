@@ -100,6 +100,17 @@ pub fn delete_holdings_from_db(ids: &[String]) -> Result<(), Box<dyn std::error:
     Ok(())
 }
 
+pub fn delete_all_holdings() -> Result<(), Box<dyn std::error::Error>> {
+    let conn = init_db()?;
+    let deleted = conn.execute("DELETE from holdings", [])?;
+    if deleted == 0 {
+        println!("No holdings to delete");
+    } else {
+        println!("All {} holdings deleted", deleted);
+    }
+    Ok(())
+}
+
 pub fn get_holding_count() -> Result<usize, Box<dyn std::error::Error>> {
     let conn = init_db()?;
     let count: i64 = conn.query_row("SELECT COUNT(*) FROM holdings", [], |row| row.get(0))?;
@@ -174,7 +185,7 @@ pub fn load_holdings_sorted(
                 // Why the nesting?
                 std::io::ErrorKind::InvalidInput,
                 format!("Invalid sort column: {}", column),
-            )))
+            )));
         }
     };
 
@@ -213,38 +224,4 @@ pub fn load_holdings_with_preference() -> Result<Vec<GoldHolding>, Box<dyn std::
         Some(pref) => load_holdings_sorted(&pref.column, pref.ascending),
         None => load_holdings(), // fallback to unsorted if no preference saved
     }
-}
-
-pub fn set_sort_preference(
-    column: String,
-    ascending: bool,
-) -> Result<(), Box<dyn std::error::Error>> {
-    // Validate column name
-    let valid_columns = [
-        "uid",
-        "coin_type",
-        "coin_year",
-        "gold_content",
-        "purchase_date",
-        "purchase_price",
-    ];
-
-    if !valid_columns.contains(&column.as_str()) {
-        return Err(format!(
-            "Invalid column '{}'. Valid columns: {}",
-            column,
-            valid_columns.join(", ")
-        )
-        .into());
-    }
-
-    save_sort_preference_to_db(&column, ascending)?;
-
-    println!(
-        "✓ Sort preference saved: {} by {}",
-        if ascending { "Ascending" } else { "Descending" },
-        column
-    );
-
-    Ok(())
 }

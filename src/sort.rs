@@ -15,7 +15,7 @@ pub async fn set_sort_preference() -> Result<(), Box<dyn std::error::Error>> {
         column
     );
 
-    list_holdings(false).await;
+    list_holdings(false).await?;
 
     Ok(())
 }
