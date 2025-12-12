@@ -24,7 +24,7 @@
 13. Dev script: populate DB ✅
 14. Implement sort by ✅
 15. Sort by stats
-16. Delete all
+16. Delete all ✅
 17. Edit holding
 18. Address comments
 19. Make sure table works from install
@@ -36,6 +36,7 @@
 
 --------------------------------
 
+- Migrate to dashboard style?
 - Multi-metal
 - Multi-vault
 - Styling revamp:
@@ -44,7 +45,6 @@
 - Add note
 - Delete all
 - Beef up stats. Add graphs etc.
-- Migrate to dashboard style?
 
 ---------------------------
 

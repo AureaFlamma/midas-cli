@@ -5,6 +5,7 @@ mod coin_types;
 mod constants;
 mod database;
 mod delete;
+mod edit;
 mod gold_price;
 mod helpers;
 mod list;
@@ -17,6 +18,7 @@ mod uid;
 use add::add_holding;
 use delete::{delete_holdings_with_args, delete_holdings_without_args};
 use dotenv::dotenv;
+use edit::edit_holding_with_arg;
 use list::list_holdings;
 use populate_table::populate_table;
 use sort::set_sort_preference;
@@ -42,6 +44,9 @@ enum Commands {
     },
     Populate,
     Sort,
+    Edit {
+        id: String, // ToDo: add vector.
+    },
 }
 #[tokio::main]
 async fn main() {
@@ -84,6 +89,12 @@ async fn main() {
         Commands::Sort => {
             if let Err(e) = set_sort_preference().await {
                 eprintln!("Error setting sort preference: {}", e);
+                std::process::exit(1);
+            }
+        }
+        Commands::Edit { id } => {
+            if let Err(e) = edit_holding_with_arg(id) {
+                eprintln!("Error editing holdings: {}", e);
                 std::process::exit(1);
             }
         }
