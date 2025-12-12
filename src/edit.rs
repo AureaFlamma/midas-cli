@@ -9,7 +9,19 @@ pub fn edit_holding_with_arg(id: String) -> Result<(), Box<dyn std::error::Error
         .ok_or_else(|| format!("Holding with id '{}' not found", id))?;
 
     let display_string = format!(
-        "{} | {} | {} | {} | {}",
+        // TODO: Abstract into string literal
+        "
+# Coin type:
+{}
+# Mint year:
+{}
+# Gold content:
+{}
+# Purchase date:
+{}
+# Purchase price:
+{}  
+        ",
         selected_holding.coin_type,
         selected_holding.coin_year,
         selected_holding.gold_content,
@@ -22,7 +34,7 @@ pub fn edit_holding_with_arg(id: String) -> Result<(), Box<dyn std::error::Error
     let updated_holding = parse_edited_holding(&edited, &selected_holding.uid)?; // <?> Why not the values directly?
 
     println!(
-        "Updated holding {}: {} | {} | {} | {} | {}",
+        "Updated holding {}: {} | {} | {}g Au | bought {} for {}",
         updated_holding.uid,
         updated_holding.coin_type,
         updated_holding.coin_year,
@@ -38,12 +50,11 @@ fn parse_edited_holding(
     editable: &str,
     uid: &str,
 ) -> Result<GoldHolding, Box<dyn std::error::Error>> {
-    let data_line = editable
+    let parts: Vec<&str> = editable
         .lines()
-        .find(|line| !line.trim().starts_with('#') && !line.trim().is_empty())
-        .ok_or("no data found in edited content")?;
-
-    let parts: Vec<&str> = data_line.split('|').map(|part| part.trim()).collect();
+        .filter(|line| !line.trim().starts_with('#') && !line.trim().is_empty())
+        .map(|part| part.trim())
+        .collect();
 
     if parts.len() != 5 {
         return Err(format!("Expected 5 fields, found {}", parts.len()).into());

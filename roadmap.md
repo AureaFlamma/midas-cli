@@ -45,6 +45,7 @@
 - Add note
 - Delete all
 - Beef up stats. Add graphs etc.
+- shortcut for editing individual holdings
 
 ---------------------------
 
