@@ -174,7 +174,7 @@ pub fn load_holdings_sorted(
                 // Why the nesting?
                 std::io::ErrorKind::InvalidInput,
                 format!("Invalid sort column: {}", column),
-            )))
+            )));
         }
     };
 
@@ -215,36 +215,36 @@ pub fn load_holdings_with_preference() -> Result<Vec<GoldHolding>, Box<dyn std::
     }
 }
 
-pub fn set_sort_preference(
-    column: String,
-    ascending: bool,
+pub fn update_holding(
+    old_holding_uid: &str,
+    new_holding: &GoldHolding,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    // Validate column name
-    let valid_columns = [
-        "uid",
-        "coin_type",
-        "coin_year",
-        "gold_content",
-        "purchase_date",
-        "purchase_price",
-    ];
+    let conn = init_db()?;
+    let GoldHolding {
+        uid,
+        coin_type,
+        coin_year,
+        gold_content,
+        purchase_date,
+        purchase_price,
+    } = new_holding;
 
-    if !valid_columns.contains(&column.as_str()) {
-        return Err(format!(
-            "Invalid column '{}'. Valid columns: {}",
-            column,
-            valid_columns.join(", ")
-        )
-        .into());
-    }
-
-    save_sort_preference_to_db(&column, ascending)?;
-
-    println!(
-        "✓ Sort preference saved: {} by {}",
-        if ascending { "Ascending" } else { "Descending" },
-        column
-    );
+    // TODO: SQL Syntax highlighting - look for extension.
+    conn.execute(
+        "
+        UPDATE holdings
+        SET uid = ?1, coin_type = ?2, coin_year = ?3, gold_content = ?4, purchase_date = ?5, purchase_price= ?6  
+        WHERE uid = ?7",
+        params![
+            uid,
+            coin_type,
+            coin_year,
+            gold_content,
+            purchase_date,
+            purchase_price,
+            old_holding_uid
+        ],
+    )?;
 
     Ok(())
 }

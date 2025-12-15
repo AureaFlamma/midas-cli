@@ -1,4 +1,5 @@
-use crate::{database::load_holdings, types::GoldHolding};
+use crate::database::{load_holdings, update_holding};
+use crate::types::GoldHolding;
 
 pub fn edit_holding_with_arg(id: String) -> Result<(), Box<dyn std::error::Error>> {
     let holdings = load_holdings()?;
@@ -33,14 +34,10 @@ pub fn edit_holding_with_arg(id: String) -> Result<(), Box<dyn std::error::Error
 
     let updated_holding = parse_edited_holding(&edited, &selected_holding.uid)?; // <?> Why not the values directly?
 
+    update_holding(&selected_holding.uid, &updated_holding)?;
     println!(
-        "Updated holding {}: {} | {} | {}g Au | bought {} for {}",
-        updated_holding.uid,
-        updated_holding.coin_type,
-        updated_holding.coin_year,
-        updated_holding.gold_content,
-        updated_holding.purchase_date,
-        updated_holding.purchase_price,
+        "succesfully updated holding {}. It now has id of {}",
+        selected_holding.uid, updated_holding.uid
     );
 
     Ok(())
