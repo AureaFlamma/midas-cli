@@ -1,5 +1,6 @@
 use crate::database::{load_holdings, update_holding};
 use crate::types::GoldHolding;
+use crate::uid::update_uid;
 
 pub fn edit_holding_with_arg(id: String) -> Result<(), Box<dyn std::error::Error>> {
     let holdings = load_holdings()?;
@@ -32,7 +33,7 @@ pub fn edit_holding_with_arg(id: String) -> Result<(), Box<dyn std::error::Error
 
     let edited = edit::edit(display_string)?;
 
-    let updated_holding = parse_edited_holding(&edited, &selected_holding.uid)?; // <?> Why not the values directly?
+    let updated_holding = parse_edited_holding(&edited, &selected_holding)?; // <?> Why not the values directly?
 
     update_holding(&selected_holding.uid, &updated_holding)?;
     println!(
@@ -45,26 +46,27 @@ pub fn edit_holding_with_arg(id: String) -> Result<(), Box<dyn std::error::Error
 
 fn parse_edited_holding(
     editable: &str,
-    uid: &str,
+    old_holding: &GoldHolding,
 ) -> Result<GoldHolding, Box<dyn std::error::Error>> {
     let parts: Vec<&str> = editable
         .lines()
         .filter(|line| !line.trim().starts_with('#') && !line.trim().is_empty())
         .map(|part| part.trim())
         .collect();
-
+    // TODO: validation function
     if parts.len() != 5 {
         return Err(format!("Expected 5 fields, found {}", parts.len()).into());
     }
-
-    Ok(GoldHolding {
-        uid: uid.to_string(),
+    let mut updated_holding: GoldHolding = GoldHolding {
+        uid: old_holding.uid.clone(),
         coin_type: parts[0].to_string(),
         coin_year: parts[1].to_string(),
         gold_content: parts[2].parse()?,
         purchase_date: parts[3].to_string(),
         purchase_price: parts[4].parse()?,
-    })
-}
+    };
 
-// ToDo: Re-create uid based on new coin name
+    updated_holding.uid = update_uid(&updated_holding, old_holding)?;
+
+    Ok(updated_holding)
+}

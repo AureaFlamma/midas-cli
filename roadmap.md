@@ -26,6 +26,7 @@
 15. Sort by stats
 16. Delete all ✅
 17. Edit holding
+  - UID change
 18. Address comments
 19. Make sure table works from install
 20. Why won't the key work from outside directory?
