@@ -1,6 +1,8 @@
+use crate::constants::MINIMUM_COIN_YEAR;
 use crate::database::{load_holdings, update_holding};
 use crate::types::GoldHolding;
 use crate::uid::update_uid;
+use chrono::{Datelike, NaiveDate, Utc};
 
 pub fn edit_holding_with_arg(id: String) -> Result<(), Box<dyn std::error::Error>> {
     let holdings = load_holdings()?;
@@ -19,7 +21,7 @@ pub fn edit_holding_with_arg(id: String) -> Result<(), Box<dyn std::error::Error
 {}
 # Gold content:
 {}
-# Purchase date:
+# Purchase date (YYYY-MM-DD):
 {}
 # Purchase price:
 {}  
@@ -53,13 +55,12 @@ fn parse_edited_holding(
         .filter(|line| !line.trim().starts_with('#') && !line.trim().is_empty())
         .map(|part| part.trim())
         .collect();
-    // TODO: validation function
-    if parts.len() != 5 {
-        return Err(format!("Expected 5 fields, found {}", parts.len()).into());
-    }
+
+    validate_edited_holding(&parts)?;
+
     let mut updated_holding: GoldHolding = GoldHolding {
         uid: old_holding.uid.clone(),
-        coin_type: parts[0].to_string(),
+        coin_type: parts[0].to_string(), // TODO: A dropdown would be good here
         coin_year: parts[1].to_string(),
         gold_content: parts[2].parse()?,
         purchase_date: parts[3].to_string(),
@@ -70,3 +71,39 @@ fn parse_edited_holding(
 
     Ok(updated_holding)
 }
+
+fn validate_edited_holding(
+    parts: &[&str], // Length is known ahead of time. Oughtn't it be array then?
+) -> Result<(), Box<dyn std::error::Error>> {
+    let parts_array: [&str; 5] = parts
+        .try_into()
+        .map_err(|_| Box::<dyn std::error::Error>::from("Expected exactly 5 fields"))?;
+
+    let [_, coin_year, _, purchase_date, _] = parts_array;
+
+    // TODO: Perhaps this and the equivalent in add.rs could be abstracted into a common helper?
+    let current_year: u32 = Utc::now().year().try_into().unwrap();
+    match coin_year.parse::<u32>() {
+        Ok(coin_year) if (coin_year >= MINIMUM_COIN_YEAR && coin_year <= current_year) => {}
+        Ok(coin_year) if coin_year > current_year => {
+            return Err(format!(
+                "Invalid mint year. Year cannot be in the future (max: {})",
+                current_year,
+            )
+            .into());
+        }
+        _ => return Err("Invalid mint year format. Please use YYYY (e.g., 2024)".into()),
+    }
+
+    // TODO: Perhaps this and the equivalent in add.rs could be abstracted into a common helper?
+    match NaiveDate::parse_from_str(purchase_date, "%Y-%m-%d") {
+        Ok(_) => {}
+        Err(_) => {
+            return Err("Invalid purchase date format. Please use YYYY-MM-DD (e.g. 2024)".into())
+        }
+    }
+
+    Ok(())
+}
+
+// TODO: Would be good to prompt user for re-input of the whole thing OR re-input of the invalid value

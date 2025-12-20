@@ -28,17 +28,17 @@ pub fn add_holding() -> Result<(), Box<dyn std::error::Error>> {
                     current_year
                 );
             }
-            _ => println!("Invalid year format. Please use YYYY (e.g., 2024)"),
+            _ => println!("Invalid year format. Please use YYYY (e.g. 2024)"),
         }
     };
     // Get purchase date
     let purchase_date = loop {
         let date_str = prompt("Purchase date (YYYY-MM-DD): ")?;
 
-        // Validate date format
+        // TODO: Abstract this and the equivalent in edit.rs into a helper.
         match NaiveDate::parse_from_str(&date_str, "%Y-%m-%d") {
             Ok(_) => break date_str,
-            Err(_) => println!("Invalid date format. Please use YYYY-MM-DD (e.g., 2024-01-15)"),
+            Err(_) => println!("Invalid date format. Please use YYYY-MM-DD (e.g. 2024-01-15)"),
         }
     };
 
