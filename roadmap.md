@@ -26,13 +26,17 @@
 15. Sort by stats
 16. Delete all ✅
 17. Edit holding
-  - UID change
-18. Address comments
-19. Make sure table works from install
-20. Why won't the key work from outside directory?
-21. User-added key.
-22. Package and put online.
-23. Update midas rex 
+  - UID change ✅
+  - validation and re-input
+  - UID to use pre-defined coin codes, not user-entered display name 
+18. Autocomplete for coin name
+19. Support for bars
+20. Address comments
+21. Make sure table works from install
+22. Why won't the key work from outside directory?
+23. User-added key.
+24. Package and put online.
+25. Update midas rex 
 ===== RELEASE BETA ========
 
 --------------------------------

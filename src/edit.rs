@@ -34,16 +34,23 @@ pub fn edit_holding_with_arg(id: String) -> Result<(), Box<dyn std::error::Error
     );
 
     let edited = edit::edit(display_string)?;
+    // <?> Why not the values directly?
+    match parse_edited_holding(&edited, &selected_holding) {
+        Ok(updated_holding) => {
+            update_holding(&selected_holding.uid, &updated_holding)?;
+            println!(
+                "succesfully updated holding {}. It now has id of {}",
+                selected_holding.uid, updated_holding.uid
+            );
 
-    let updated_holding = parse_edited_holding(&edited, &selected_holding)?; // <?> Why not the values directly?
+            Ok(())
+        }
+        Err(e) => {
+            eprintln!("{}", e);
 
-    update_holding(&selected_holding.uid, &updated_holding)?;
-    println!(
-        "succesfully updated holding {}. It now has id of {}",
-        selected_holding.uid, updated_holding.uid
-    );
-
-    Ok(())
+            Ok(())
+        }
+    }
 }
 
 fn parse_edited_holding(
@@ -72,6 +79,26 @@ fn parse_edited_holding(
     Ok(updated_holding)
 }
 
+#[derive(Debug)]
+enum ValidationError {
+    InvalidMintYear(String),
+    InvalidPurchaseDate(String),
+}
+// This makes the errors displayable.
+// It gives it the Display trait, which makes them printable.
+// In turn, the Display trait requires giving the entity a function with the signature of:
+// fmt(&self, f: &mut Formatter<'_>) -> Result
+impl std::fmt::Display for ValidationError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            ValidationError::InvalidMintYear(msg) => write!(f, "{}", msg),
+            ValidationError::InvalidPurchaseDate(msg) => write!(f, "{}", msg),
+        }
+    }
+}
+
+impl std::error::Error for ValidationError {}
+
 fn validate_edited_holding(
     parts: &[&str], // Length is known ahead of time. Oughtn't it be array then?
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -86,20 +113,25 @@ fn validate_edited_holding(
     match coin_year.parse::<u32>() {
         Ok(coin_year) if (coin_year >= MINIMUM_COIN_YEAR && coin_year <= current_year) => {}
         Ok(coin_year) if coin_year > current_year => {
-            return Err(format!(
-                "Invalid mint year. Year cannot be in the future (max: {})",
-                current_year,
-            )
-            .into());
+            return Err(Box::new(ValidationError::InvalidMintYear(format!(
+                "Invalid mint year. Mint year cannot be in the future. Max: {}",
+                current_year
+            ))))
         }
-        _ => return Err("Invalid mint year format. Please use YYYY (e.g., 2024)".into()),
+        _ => {
+            return Err(Box::new(ValidationError::InvalidMintYear(
+                "Invalid mint year. Please use YYYY (e.g. 2024)".into(),
+            )))
+        }
     }
 
     // TODO: Perhaps this and the equivalent in add.rs could be abstracted into a common helper?
     match NaiveDate::parse_from_str(purchase_date, "%Y-%m-%d") {
         Ok(_) => {}
         Err(_) => {
-            return Err("Invalid purchase date format. Please use YYYY-MM-DD (e.g. 2024)".into())
+            return Err(Box::new(ValidationError::InvalidPurchaseDate(
+                "Invalid purchase date format. Please use YYYY-MM-DD".into(),
+            )))
         }
     }
 

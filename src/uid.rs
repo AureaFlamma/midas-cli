@@ -36,6 +36,7 @@ pub fn construct_uid(code: &str, year: &str) -> Result<String, Box<dyn std::erro
     }
 }
 // TODO: the new uid may inherit the unique differentiator.
+// TODO: new UID to use pre-defined coin codes, not the user-display coin name
 pub fn update_uid(
     new_holding: &GoldHolding,
     old_holding: &GoldHolding,
