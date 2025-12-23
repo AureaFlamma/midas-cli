@@ -12,7 +12,7 @@ pub fn edit_holding_with_arg(id: String) -> Result<(), Box<dyn std::error::Error
         .find(|holding| holding.uid == id)
         .ok_or_else(|| format!("Holding with id '{}' not found", id))?;
 
-    let display_string = format!(
+    let mut display_string = format!(
         // TODO: Abstract into string literal
         "
 # Coin type:
@@ -33,24 +33,28 @@ pub fn edit_holding_with_arg(id: String) -> Result<(), Box<dyn std::error::Error
         selected_holding.purchase_price
     );
 
-    let edited = edit::edit(display_string)?;
-    // <?> Why not the values directly?
-    match parse_edited_holding(&edited, &selected_holding) {
-        Ok(updated_holding) => {
-            update_holding(&selected_holding.uid, &updated_holding)?;
-            println!(
-                "succesfully updated holding {}. It now has id of {}",
-                selected_holding.uid, updated_holding.uid
-            );
-
-            Ok(())
-        }
-        Err(e) => {
-            eprintln!("{}", e);
-
-            Ok(())
+    loop {
+        let edited = edit::edit(display_string.clone())?;
+        // <?> Why not the values directly?
+        match parse_edited_holding(&edited, &selected_holding) {
+            Ok(updated_holding) => {
+                update_holding(&selected_holding.uid, &updated_holding)?;
+                println!(
+                    "succesfully updated holding {}. It now has id of {}",
+                    selected_holding.uid, updated_holding.uid
+                );
+                break;
+            }
+            Err(e) => {
+                println!("❌ {}", e);
+                println!("Press Enter to try again...");
+                std::io::stdin().read_line(&mut String::new())?;
+                display_string = format!("# ERROR: {}\n\n{}", e, display_string);
+            }
         }
     }
+
+    Ok(())
 }
 
 fn parse_edited_holding(

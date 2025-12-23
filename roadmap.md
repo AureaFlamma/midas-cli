@@ -28,19 +28,24 @@
 17. Edit holding
   - UID change ✅
   - validation and re-input
-  - UID to use pre-defined coin codes, not user-entered display name 
-18. Autocomplete for coin name
-19. Support for bars
-20. Address comments
-21. Make sure table works from install
-22. Why won't the key work from outside directory?
-23. User-added key.
-24. Package and put online.
-25. Update midas rex 
+  - UID to use pre-defined coin codes, not user-entered display name
+  - No args variant
+18. Support for bars
+19. Address comments
+20. Make sure table works from install
+21. Why won't the key work from outside directory?
+22. User-added key.
+23. Package and put online.
+24. Update midas rex 
 ===== RELEASE BETA ========
 
---------------------------------
+B R E A K  4  L E A R N I N G  R U S T
 
+===========================
+
+- Edit: different re-entry prompts for different types of date input errors.
+- Edit: If more than one entry error, dispalys message for all.
+- Autocomplete for coin name
 - Migrate to dashboard style?
 - Multi-metal
 - Multi-vault
