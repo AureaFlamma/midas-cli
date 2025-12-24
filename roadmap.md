@@ -23,9 +23,9 @@
 12. Folder structure (esp. helpers) ⏸️ - will do later. Not enough files to know what pattern would make sense.
 13. Dev script: populate DB ✅
 14. Implement sort by ✅
-15. Sort by stats
-16. Delete all
-17. Edit holding
+16. Delete all ✅
+17. Support for bars
+18. Support for more types of coins
 18. Address comments
 19. Make sure table works from install
 20. Why won't the key work from outside directory?
@@ -34,8 +34,14 @@
 23. Update midas rex 
 ===== RELEASE BETA ========
 
---------------------------------
+B R E A K  4  L E A R N I N G  R U S T
 
+===========================
+
+- Sort by stats
+- Edit holding
+- Autocomplete for coin name
+- Migrate to dashboard style?
 - Multi-metal
 - Multi-vault
 - Styling revamp:
@@ -44,7 +50,8 @@
 - Add note
 - Delete all
 - Beef up stats. Add graphs etc.
-- Migrate to dashboard style?
+- shortcut for editing individual holdings
+- feature request command. 
 
 ---------------------------
 
